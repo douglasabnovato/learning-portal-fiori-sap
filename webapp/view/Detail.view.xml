@@ -1,0 +1,44 @@
+<mvc:View
+    controllerName="com.douglas.learningportal.controller.Detail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page
+        id="detailPage"
+        title="Detalhes da Trilha de Estudo"
+        showNavButton="true"
+        navButtonPress=".onNavBack"
+        class="sapUiContentPadding">
+        <content>
+            <ObjectHeader
+                title="{Titulo}"
+                number="{Horas}"
+                numberUnit="Horas"
+                class="sapUiResponsiveMargin sapUiMediumMarginTop">
+                <attributes>
+                    <ObjectAttribute text="Status Atual: {Status}" />
+                    <ObjectAttribute text="Total de Módulos: {ModulosCount}" />
+                    <ObjectAttribute text="Módulos Concluídos: {Concluidos}" />
+                </attributes>
+            </ObjectHeader>
+
+            <Panel
+                headerText="Visão Geral e Contexto da Trilha"
+                class="sapUiResponsiveMargin"
+                width="auto"
+                expandable="false">
+                <content>
+                    <VBox class="sapUiMediumMargin">
+                        <Text text="{Descricao}" class="sapUiSmallMarginBottom" />
+                        <ProgressIndicator
+                            percentValue="{Progresso}"
+                            displayValue="{= ${Progresso} + '%' }"
+                            showValue="true"
+                            state="{= ${Progresso} === 100 ? 'Success' : 'Information' }"
+                            width="100%"
+                            class="sapUiSmallMarginTop" />
+                    </VBox>
+                </content>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,36 +1,35 @@
-<mvc:View
-    controllerName="com.douglas.learningportal.controller.App"
+<mvc:View controllerName="com.douglas.learningportal.controller.App"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <Shell>
-        <App id="app">
-            <pages>
-                <Page title="Learning Portal Fiori SAP">
-                    <content>
-                        <!-- Barra de Destaque / Boas-vindas -->
-                        <MessageStrip
-                            text="Bem-vindo ao seu primeiro projeto SAP Fiori! Consumindo modelo de dados local com interatividade."
-                            type="Success"
-                            showIcon="true"
-                            class="sapUiMediumMargin" />
 
-                        <!-- Lista de Trilhas vindas do JSON com Interatividade -->
-                        <List
-                            id="trilhasList"
-                            headerText="Minhas Trilhas de Estudo (SAPUI5 &amp; ABAP Cloud)"
-                            items="{/Trilhas}"
-                            class="sapUiResponsiveMargin">
-                            <StandardListItem
-                                title="{Titulo}"
-                                description="{Descricao}"
-                                info="{Status}"
-                                infoState="{= ${Status} === 'Concluído' ? 'Success' : (${Status} === 'Em Andamento' ? 'Information' : 'None') }"
-                                type="Active"
-                                press=".onTrilhaPress" />
+    <Shell>
+
+        <App id="app">
+
+            <pages>
+
+                <Page title="{i18n>appTitle}">
+
+                    <content>
+
+                        <!-- Barra de destaque / boas-vindas -->
+                        <MessageStrip text="{i18n>welcomeMessage}" type="Success" showIcon="true" class="sapUiMediumMargin" />
+
+                        <!-- Lista de trilhas -->
+                        <List id="trilhasList" headerText="{i18n>trilhasHeader}" items="{/Trilhas}" class="sapUiResponsiveMargin">
+
+                            <StandardListItem title="{Titulo}" description="{Descricao}" info="{Status}" infoState="{= ${Status} === 'Concluído' ? 'Success' : (${Status} === 'Em Andamento' ? 'Information' : 'None') }" type="Active" press=".onTrilhaPress" />
+
                         </List>
+
                     </content>
+
                 </Page>
+
             </pages>
+
         </App>
+
     </Shell>
+
 </mvc:View>

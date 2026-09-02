@@ -3,8 +3,9 @@
     "sap.app": {
         "id": "com.douglas.learningportal",
         "type": "application",
-        "title": "Learning Portal Fiori SAP",
-        "description": "Portal de estudos e portfólio em SAPUI5 e Fiori",
+        "i18n": "i18n/i18n.properties",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
         "applicationVersion": {
             "version": "1.0.0"
         }
@@ -35,6 +36,12 @@
             "": {
                 "type": "sap.ui.model.json.JSONModel",
                 "uri": "model/trilhas.json"
+            },
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.douglas.learningportal.i18n.i18n"
+                }
             }
         },
         "contentDensities": {

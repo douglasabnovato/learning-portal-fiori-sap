@@ -47,6 +47,26 @@ learning-portal-fiori-sap/
 * Formatação Condicional de Status: Cores e estados visuais dinâmicos baseados no progresso de cada trilha de estudo.
 * Interatividade via Diálogo Modais: Eventos de clique customizados no controller para exibição de detalhes técnicos e modais informativos.
 
+## 🚀 Plano de Ação
+
+* **Filtro de Pesquisa em Tempo Real (`SearchField`)**
+  * [ ] **Etapa 1**: Adicionar o controle `SearchField` no arquivo `webapp/view/App.view.xml` logo acima da lista de trilhas.
+  * [ ] **Etapa 2**: Implementar a função de captura do texto digitado no arquivo `webapp/controller/App.controller.js`.
+  * [ ] **Etapa 3**: Configurar os filtros utilizando `sap/ui/model/Filter` e `FilterOperator` para buscar o termo no título.
+  * [ ] **Etapa 4**: Aplicar os filtros dinamicamente no binding da listagem.
+
+* **Página de Detalhes Dedicada (`Routing and Navigation`)**
+  * [ ] **Etapa 1**: Configurar as rotas e alvos na seção `routing` do arquivo `webapp/manifest.json`.
+  * [ ] **Etapa 2**: Criar a nova view de detalhes (`webapp/view/Detail.view.xml`) utilizando componentes como `ObjectHeader`.
+  * [ ] **Etapa 3**: Desenvolver o controller de detalhes (`webapp/controller/Detail.controller.js`) para processar os parâmetros da rota.
+  * [ ] **Etapa 4**: Substituir o modal atual pela navegação via roteador do SAPUI5 ao clicar em um item da lista.
+
+* **Integração de Progresso Gráfico (`ProgressIndicator`)**
+  * [ ] **Etapa 1**: Validar a propriedade numérica `Progresso` (0 a 100) no arquivo de dados `webapp/model/trilhas.json`.
+  * [ ] **Etapa 2**: Adaptar o layout do item na view para acomodar componentes visuais adicionais.
+  * [ ] **Etapa 3**: Inserir o componente nativo `ProgressIndicator` na interface.
+  * [ ] **Etapa 4**: Realizar o *data binding* da propriedade `percentValue` diretamente com o valor do modelo.
+
 ## Licença
 
 Este projeto é distribuído sob a licença ISC para fins educacionais e de portfólio profissional.

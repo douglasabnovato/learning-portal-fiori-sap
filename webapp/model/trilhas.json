@@ -3,7 +3,7 @@
     {
       "Id": "1",
       "Titulo": "SAPUI5 & Fiori Foundation",
-      "Descricao": "Trilha focada no desenvolvimento moderno de interfaces SAP Fiori utilizando JavaScript.",
+      "Descricao": "Trilha avançada focada no desenvolvimento moderno de interfaces SAP Fiori Horizon utilizando MVC, componentização, Data Binding reativo e boas práticas arquiteturais em JavaScript ES6+.",
       "Status": "Em Andamento",
       "Progresso": 75,
       "ModulosCount": 8,
@@ -13,7 +13,7 @@
     {
       "Id": "2",
       "Titulo": "ABAP Cloud & CDS Views",
-      "Descricao": "Arquitetura limpa e criação de serviços OData modernos no S/4HANA.",
+      "Descricao": "Arquitetura limpa orientada ao ABAP RESTful Application Programming Model (RAP), criação de CDS Views avançadas e serviços OData v4 modernos no ecossistema S/4HANA.",
       "Status": "Não Iniciado",
       "Progresso": 0,
       "ModulosCount": 6,
@@ -22,8 +22,8 @@
     },
     {
       "Id": "3",
-      "Titulo": "SAP BTP & Extensões",
-      "Descricao": "Desenvolvimento side-by-side e integração na Business Technology Platform.",
+      "Titulo": "SAP BTP & Extensões Side-by-Side",
+      "Descricao": "Desenvolvimento nativo na SAP Business Technology Platform utilizando SAP Build Work Zone, Cloud Foundry, gerenciamento de destinos e conectividade segura com sistemas core.",
       "Status": "Concluído",
       "Progresso": 100,
       "ModulosCount": 5,
@@ -32,13 +32,83 @@
     },
     {
       "Id": "4",
-      "Titulo": "AI Assistant - Joule",
-      "Descricao": "Uso de Inteligência Artificial generativa para produtividade no desenvolvimento SAP.",
+      "Titulo": "AI Assistant - Joule & GenAI",
+      "Descricao": "Aplicação de Inteligência Artificial generativa e assistentes corporativos integrados ao ecossistema SAP para automação de processos e aumento de produtividade técnica.",
       "Status": "Em Andamento",
       "Progresso": 30,
       "ModulosCount": 4,
       "Horas": 15,
       "Concluidos": 1
+    },
+    {
+      "Id": "5",
+      "Titulo": "SAP Integration Suite",
+      "Descricao": "Orquestração avançada de cenários de integração cloud-to-cloud e cloud-on-premise utilizando CPI (Cloud Integration), APIs REST/SOAP e mapeamentos complexos de dados.",
+      "Status": "Não Iniciado",
+      "Progresso": 0,
+      "ModulosCount": 7,
+      "Horas": 40,
+      "Concluidos": 0
+    },
+    {
+      "Id": "6",
+      "Titulo": "SAP S/4HANA Core Logistics (MM/SD)",
+      "Descricao": "Domínio profundo dos processos logísticos centrais de Gestão de Materiais (MM) e Vendas e Distribuição (SD), incluindo customizações e integração com fluxos de transporte.",
+      "Status": "Em Andamento",
+      "Progresso": 50,
+      "ModulosCount": 10,
+      "Horas": 60,
+      "Concluidos": 5
+    },
+    {
+      "Id": "7",
+      "Titulo": "SAP Analytics Cloud & Smart Predict",
+      "Descricao": "Construção de dashboards corporativos analíticos, planejamento financeiro integrado e uso de modelos preditivos baseados em machine learning para tomada de decisões estratégicas.",
+      "Status": "Não Iniciado",
+      "Progresso": 0,
+      "ModulosCount": 5,
+      "Horas": 25,
+      "Concluidos": 0
+    },
+    {
+      "Id": "8",
+      "Titulo": "SAP Fiori Elements & Floorplans",
+      "Descricao": "Aceleração de desenvolvimento frontend utilizando templates padronizados do Fiori Elements (List Report, Object Page, Overview Page) baseados em anotações CDS.",
+      "Status": "Em Andamento",
+      "Progresso": 20,
+      "ModulosCount": 6,
+      "Horas": 35,
+      "Concluidos": 1
+    },
+    {
+      "Id": "9",
+      "Titulo": "SAP Build Apps & Low-Code/No-Code",
+      "Descricao": "Criação ágil de aplicações mobile e web corporativas sem código ou com baixo código utilizando a plataforma SAP Build Apps integrada a serviços OData da BTP.",
+      "Status": "Concluído",
+      "Progresso": 100,
+      "ModulosCount": 4,
+      "Horas": 18,
+      "Concluidos": 4
+    },
+    {
+      "Id": "10",
+      "Titulo": "Segurança e Governança em SAP BTP",
+      "Descricao": "Gerenciamento de identidades, trust management, autenticação OAuth2, scopes, roles e diretrizes de conformidade corporativa para aplicações desenvolvidas na nuvem.",
+      "Status": "Não Iniciado",
+      "Progresso": 0,
+      "ModulosCount": 5,
+      "Horas": 20,
+      "Concluidos": 0
+    },
+    {
+      "Id": "11",
+      "Titulo": "DevOps & CI/CD para SAPUI5 e ABAP",
+      "Descricao": "Implementação de pipelines de integração e entrega contínua utilizando UI5 Tooling, testes automatizados (OPA5/QUnit), gclient e controle de versionamento avançado no Git.",
+      "Status": "Em Andamento",
+      "Progresso": 40,
+      "ModulosCount": 6,
+      "Horas": 30,
+      "Concluidos": 2
     }
   ]
 }

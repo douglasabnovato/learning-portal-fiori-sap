@@ -1,10 +1,10 @@
 sap.ui.define([
-    "sap/ui/core/UIComponent",
-    "sap/ui/Device"
-], function (UIComponent, Device) {
+    "sap/ui/core/UIComponent"
+], function (UIComponent) {
     "use strict";
 
     return UIComponent.extend("com.douglas.learningportal.Component", {
+
         metadata: {
             manifest: "json"
         },
@@ -12,5 +12,6 @@ sap.ui.define([
         init: function () {
             UIComponent.prototype.init.apply(this, arguments);
         }
+
     });
 });
