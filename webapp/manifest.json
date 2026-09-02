@@ -1,0 +1,45 @@
+{
+    "_version": "1.40.0",
+    "sap.app": {
+        "id": "com.douglas.learningportal",
+        "type": "application",
+        "title": "Learning Portal Fiori SAP",
+        "description": "Portal de estudos e portfólio em SAPUI5 e Fiori",
+        "applicationVersion": {
+            "version": "1.0.0"
+        }
+    },
+    "sap.ui": {
+        "technology": "HTML5",
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "com.douglas.learningportal.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.120.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {}
+            }
+        },
+        "models": {
+            "": {
+                "type": "sap.ui.model.json.JSONModel",
+                "uri": "model/trilhas.json"
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        }
+    }
+}

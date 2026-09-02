@@ -1,0 +1,44 @@
+{
+  "Trilhas": [
+    {
+      "Id": "1",
+      "Titulo": "SAPUI5 & Fiori Foundation",
+      "Descricao": "Trilha focada no desenvolvimento moderno de interfaces SAP Fiori utilizando JavaScript.",
+      "Status": "Em Andamento",
+      "Progresso": 75,
+      "ModulosCount": 8,
+      "Horas": 45,
+      "Concluidos": 6
+    },
+    {
+      "Id": "2",
+      "Titulo": "ABAP Cloud & CDS Views",
+      "Descricao": "Arquitetura limpa e criação de serviços OData modernos no S/4HANA.",
+      "Status": "Não Iniciado",
+      "Progresso": 0,
+      "ModulosCount": 6,
+      "Horas": 30,
+      "Concluidos": 0
+    },
+    {
+      "Id": "3",
+      "Titulo": "SAP BTP & Extensões",
+      "Descricao": "Desenvolvimento side-by-side e integração na Business Technology Platform.",
+      "Status": "Concluído",
+      "Progresso": 100,
+      "ModulosCount": 5,
+      "Horas": 20,
+      "Concluidos": 5
+    },
+    {
+      "Id": "4",
+      "Titulo": "AI Assistant - Joule",
+      "Descricao": "Uso de Inteligência Artificial generativa para produtividade no desenvolvimento SAP.",
+      "Status": "Em Andamento",
+      "Progresso": 30,
+      "ModulosCount": 4,
+      "Horas": 15,
+      "Concluidos": 1
+    }
+  ]
+}
