@@ -1,6 +1,8 @@
 <mvc:View controllerName="com.douglas.learningportal.controller.App"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards">
 
     <Shell>
 
@@ -8,19 +10,99 @@
 
             <pages>
 
-                <Page title="{i18n>appTitle}">
+                <Page id="mainPage" title="{i18n>appTitle}">
 
                     <content>
 
-                        <!-- Barra de destaque / boas-vindas -->
-                        <MessageStrip text="{i18n>welcomeMessage}" type="Success" showIcon="true" class="sapUiMediumMargin" />
+                        <VBox class="sapUiResponsiveContentPadding">
 
-                        <!-- Lista de trilhas -->
-                        <List id="trilhasList" headerText="{i18n>trilhasHeader}" items="{/Trilhas}" class="sapUiResponsiveMargin">
+                            <!-- ===================================== -->
+                            <!-- Hero -->
+                            <!-- ===================================== -->
 
-                            <StandardListItem title="{Titulo}" description="{Descricao}" info="{Status}" infoState="{= ${Status} === 'Concluído' ? 'Success' : (${Status} === 'Em Andamento' ? 'Information' : 'None') }" type="Active" press=".onTrilhaPress" />
+                            <VBox class="sapUiMediumMarginBottom">
 
-                        </List>
+                                <Title text="{i18n>welcomeTitle}" level="H1" class="sapUiSmallMarginBottom" />
+
+                                <Text text="{i18n>welcomeSubtitle}" />
+
+                            </VBox>
+
+
+                            <!-- ===================================== -->
+                            <!-- Welcome message -->
+                            <!-- ===================================== -->
+
+                            <MessageStrip text="{i18n>welcomeMessage}" type="Information" showIcon="true" class="sapUiMediumMarginBottom" />
+
+
+                            <!-- ===================================== -->
+                            <!-- Section -->
+                            <!-- ===================================== -->
+
+                            <Title text="{i18n>trilhasHeader}" level="H2" class="sapUiMediumMarginBottom" />
+
+
+                            <!-- ===================================== -->
+                            <!-- Empty state -->
+                            <!-- ===================================== -->
+
+                            <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{i18n>noTracksFound}" visible="{= ${/Trilhas}.length === 0 }" />
+
+
+                            <!-- ===================================== -->
+                            <!-- Learning cards -->
+                            <!-- ===================================== -->
+
+                            <f:GridContainer id="trilhasGrid" items="{/Trilhas}" snapToRow="false">
+
+                                <f:layout>
+
+                                    <f:GridContainerSettings columnSize="20rem" rowSize="auto" gap="1rem" />
+
+                                </f:layout>
+
+                                <f:items>
+
+                                    <f:Card width="100%" class="sapUiTinyMarginBottom">
+
+                                        <f:header>
+
+                                            <card:Header title="{Titulo}" subtitle="{Status}" iconSrc="sap-icon://learning-assistant" />
+
+                                        </f:header>
+
+                                        <f:content>
+
+                                            <VBox class="sapUiSmallMargin">
+
+                                                <Text text="{Descricao}" maxLines="3" class="sapUiSmallMarginBottom" />
+
+                                                <Label text="Progresso" class="sapUiTinyMarginBottom" />
+
+                                                <ProgressIndicator percentValue="{Progresso}" displayValue="{= ${Progresso} + '%' }" state="{= ${Status} === 'Concluído' ? 'Success' : (${Status} === 'Em Andamento' ? 'Information' : 'None') }" class="sapUiSmallMarginBottom" />
+
+                                                <HBox justifyContent="SpaceBetween">
+
+                                                    <ObjectStatus icon="sap-icon://course-book" text="{ModulosConcluidos} / {ModulosCount}" />
+
+                                                    <ObjectStatus icon="sap-icon://history" text="{Horas} h" />
+
+                                                </HBox>
+
+                                                <Button text="Ver detalhes" type="Transparent" icon="sap-icon://navigation-right-arrow" press=".onTrilhaPress" class="sapUiSmallMarginTop" />
+
+                                            </VBox>
+
+                                        </f:content>
+
+                                    </f:Card>
+
+                                </f:items>
+
+                            </f:GridContainer>
+
+                        </VBox>
 
                     </content>
 
