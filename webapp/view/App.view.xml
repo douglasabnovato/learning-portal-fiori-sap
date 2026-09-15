@@ -78,19 +78,19 @@
 
                                                 <Text text="{Descricao}" maxLines="3" class="sapUiSmallMarginBottom" />
 
-                                                <Label text="Progresso" class="sapUiTinyMarginBottom" />
+                                                <Label text="{i18n>progressLabel}" class="sapUiTinyMarginBottom" />
 
                                                 <ProgressIndicator percentValue="{Progresso}" displayValue="{= ${Progresso} + '%' }" state="{= ${Status} === 'Concluído' ? 'Success' : (${Status} === 'Em Andamento' ? 'Information' : 'None') }" class="sapUiSmallMarginBottom" />
 
                                                 <HBox justifyContent="SpaceBetween">
 
-                                                    <ObjectStatus icon="sap-icon://course-book" text="{ModulosConcluidos} / {ModulosCount}" />
+                                                    <ObjectStatus icon="sap-icon://course-book" text="{Concluidos} / {ModulosCount}" />
 
                                                     <ObjectStatus icon="sap-icon://history" text="{Horas} h" />
 
                                                 </HBox>
 
-                                                <Button text="Ver detalhes" type="Transparent" icon="sap-icon://navigation-right-arrow" press=".onTrilhaPress" class="sapUiSmallMarginTop" />
+                                                <Button text="{i18n>viewDetailsButton}" type="Transparent" icon="sap-icon://navigation-right-arrow" press=".onTrilhaPress" class="sapUiSmallMarginTop" />
 
                                             </VBox>
 
