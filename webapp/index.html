@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Portal de trilhas de estudo em SAPUI5, Fiori, ABAP Cloud, BTP e IA.">
     <title>Learning Portal Fiori SAP</title>
-    <script id="sap-ui-bootstrap" src="https://ui5.sap.com/resources/sap-ui-core.js" data-sap-ui-theme="sap_horizon"
-        data-sap-ui-resourceroots='{
-        "com.douglas.learningportal": "./"
-    }' data-sap-ui-on-init="module:sap/ui/core/ComponentSupport" data-sap-ui-compat-version="edge"
-        data-sap-ui-async="true" data-sap-ui-frame-options="trusted">
-        </script>
-
+    <!-- Bootstrap local (UI5 Tooling em desenvolvimento; incluído no build self-contained). Antes dependia do CDN ui5.sap.com -->
+    <script id="sap-ui-bootstrap" src="resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-resource-roots='{ "com.douglas.learningportal": "./" }'
+        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frame-options="trusted">
+    </script>
 </head>
-
 <body class="sapUiBody" id="content">
-    <div data-sap-ui-component data-name="com.douglas.learningportal" data-id="container"
-        data-settings='{"id" : "learningportal"}'></div>
+    <div data-sap-ui-component data-name="com.douglas.learningportal" data-id="container" data-settings='{"id" : "learningportal"}'></div>
 </body>
-
 </html>

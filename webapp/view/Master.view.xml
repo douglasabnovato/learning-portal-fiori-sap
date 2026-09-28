@@ -1,0 +1,73 @@
+<!-- Lista de trilhas em cards com busca, filtro por status e navegação para o detalhe -->
+<mvc:View controllerName="com.douglas.learningportal.controller.Master"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    xmlns:core="sap.ui.core">
+    <Page id="mainPage" title="{i18n>appTitle}">
+        <content>
+            <VBox class="sapUiResponsiveContentPadding">
+                <VBox class="sapUiMediumMarginBottom">
+                    <Title text="{i18n>welcomeTitle}" level="H1" titleStyle="H2" class="sapUiSmallMarginBottom" />
+                    <Text text="{i18n>welcomeSubtitle}" />
+                </VBox>
+
+                <MessageStrip text="{i18n>welcomeMessage}" type="Information" showIcon="true" class="sapUiMediumMarginBottom" />
+
+                <Title id="trilhasTitle" text="{i18n>trilhasHeader}" level="H2" titleStyle="H4" class="sapUiSmallMarginBottom" />
+
+                <OverflowToolbar class="sapUiSmallMarginBottom" style="Clear">
+                    <SearchField id="searchField" width="20rem" placeholder="{i18n>searchPlaceholder}" ariaLabelledBy="trilhasTitle" liveChange=".onFilter" search=".onFilter" />
+                    <Label id="statusLabel" text="{i18n>statusFilterLabel}" labelFor="statusFilter" />
+                    <SegmentedButton id="statusFilter" ariaLabelledBy="statusLabel" selectionChange=".onFilter" selectedKey="all">
+                        <items>
+                            <SegmentedButtonItem key="all" text="{i18n>filterAll}" />
+                            <SegmentedButtonItem key="Em Andamento" text="{i18n>filterInProgress}" />
+                            <SegmentedButtonItem key="Não Iniciado" text="{i18n>filterNotStarted}" />
+                            <SegmentedButtonItem key="Concluído" text="{i18n>filterDone}" />
+                        </items>
+                    </SegmentedButton>
+                    <ToolbarSpacer />
+                    <Text id="countText" text="{view>/count}" />
+                </OverflowToolbar>
+
+                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{i18n>noTracksFound}" visible="{= ${view>/count} === 0 }" />
+
+                <f:GridContainer id="trilhasGrid" items="{/Trilhas}" snapToRow="false" ariaLabelledBy="trilhasTitle">
+                    <f:layout>
+                        <f:GridContainerSettings columnSize="20rem" gap="1rem" />
+                    </f:layout>
+                    <f:layoutS>
+                        <f:GridContainerSettings columnSize="100%" gap="0.5rem" />
+                    </f:layoutS>
+                    <f:items>
+                        <f:Card width="100%">
+                            <f:header>
+                                <card:Header title="{Titulo}" subtitle="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.status' }" iconSrc="sap-icon://learning-assistant" />
+                            </f:header>
+                            <f:content>
+                                <VBox class="sapUiSmallMargin">
+                                    <Text text="{Descricao}" maxLines="3" class="sapUiSmallMarginBottom" />
+                                    <ProgressIndicator
+                                        percentValue="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.progresso' }"
+                                        displayValue="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.percentual' }"
+                                        state="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.estado' }"
+                                        tooltip="{i18n>progressLabel}"
+                                        class="sapUiSmallMarginBottom" />
+                                    <HBox justifyContent="SpaceBetween">
+                                        <ObjectStatus icon="sap-icon://course-book" text="{Concluidos} / {ModulosCount} {i18n>modulesShort}" />
+                                        <ObjectStatus icon="sap-icon://history" text="{Horas} h" />
+                                    </HBox>
+                                    <Button text="{i18n>viewDetailsButton}" type="Emphasized" icon="sap-icon://navigation-right-arrow" iconFirst="false"
+                                        tooltip="{Titulo}" press=".onTrilhaPress" class="sapUiSmallMarginTop" />
+                                </VBox>
+                            </f:content>
+                        </f:Card>
+                    </f:items>
+                </f:GridContainer>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>
+<!-- Fim de Master.view.xml -->

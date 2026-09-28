@@ -1,44 +1,38 @@
-<mvc:View
-    controllerName="com.douglas.learningportal.controller.Detail"
+<!-- Detalhe da trilha com progresso calculado; mostra página de "não encontrada" para id inválido -->
+<mvc:View controllerName="com.douglas.learningportal.controller.Detail"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <Page
-        id="detailPage"
-        title="Detalhes da Trilha de Estudo"
-        showNavButton="true"
-        navButtonPress=".onNavBack"
-        class="sapUiContentPadding">
+    <Page id="detailPage" title="{i18n>detailPageTitle}" showNavButton="true" navButtonPress=".onNavBack" navButtonTooltip="{i18n>backButton}">
         <content>
-            <ObjectHeader
-                title="{Titulo}"
-                number="{Horas}"
-                numberUnit="Horas"
-                class="sapUiResponsiveMargin sapUiMediumMarginTop">
-                <attributes>
-                    <ObjectAttribute text="Status Atual: {Status}" />
-                    <ObjectAttribute text="Total de Módulos: {ModulosCount}" />
-                    <ObjectAttribute text="Módulos Concluídos: {Concluidos}" />
-                </attributes>
-            </ObjectHeader>
-
-            <Panel
-                headerText="Visão Geral e Contexto da Trilha"
-                class="sapUiResponsiveMargin"
-                width="auto"
-                expandable="false">
-                <content>
-                    <VBox class="sapUiMediumMargin">
-                        <Text text="{Descricao}" class="sapUiSmallMarginBottom" />
-                        <ProgressIndicator
-                            percentValue="{Progresso}"
-                            displayValue="{= ${Progresso} + '%' }"
-                            showValue="true"
-                            state="{= ${Progresso} === 100 ? 'Success' : 'Information' }"
-                            width="100%"
-                            class="sapUiSmallMarginTop" />
-                    </VBox>
-                </content>
-            </Panel>
+            <IllustratedMessage id="notFound" visible="false" illustrationType="sapIllus-PageNotFound" title="{i18n>trackNotFound}">
+                <additionalContent>
+                    <Button text="{i18n>backToList}" press=".onNavBack" />
+                </additionalContent>
+            </IllustratedMessage>
+            <VBox id="detailContent">
+                <ObjectHeader title="{Titulo}" number="{Horas}" numberUnit="{i18n>hoursUnit}" class="sapUiResponsiveMargin sapUiMediumMarginTop" titleLevel="H1">
+                    <statuses>
+                        <ObjectStatus text="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.status' }" state="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.estado' }" />
+                    </statuses>
+                    <attributes>
+                        <ObjectAttribute title="{i18n>totalModules}" text="{ModulosCount}" />
+                        <ObjectAttribute title="{i18n>doneModules}" text="{Concluidos}" />
+                    </attributes>
+                </ObjectHeader>
+                <Panel headerText="{i18n>overviewTitle}" class="sapUiResponsiveMargin" width="auto">
+                    <content>
+                        <VBox class="sapUiSmallMargin">
+                            <Text text="{Descricao}" class="sapUiSmallMarginBottom" />
+                            <ProgressIndicator
+                                percentValue="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.progresso' }"
+                                displayValue="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.percentual' }"
+                                state="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.estado' }"
+                                tooltip="{i18n>progressLabel}" width="100%" class="sapUiSmallMarginTop" />
+                        </VBox>
+                    </content>
+                </Panel>
+            </VBox>
         </content>
     </Page>
 </mvc:View>
+<!-- Fim de Detail.view.xml -->

@@ -89,10 +89,10 @@ Cada trilha apresenta seu progresso através do controle:
 sap.m.ProgressIndicator
 ```
 
-O percentual é obtido diretamente do modelo:
+O percentual é calculado pelo `model/formatter.js` a partir dos módulos concluídos:
 
 ```xml
-percentValue="{Progresso}"
+percentValue="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.progresso' }"
 ```
 
 O estado visual também é definido de acordo com o status da trilha.
@@ -182,7 +182,7 @@ O projeto utiliza uma arquitetura baseada em **Model-View-Controller (MVC)**.
              │                           │
              │                           │
              ▼                           ▼
-        App.view.xml              App.controller.js
+        Master.view.xml / Detail   Master / Detail.controller
              │
              ▼
            Model
@@ -312,55 +312,50 @@ Utilizado para execução e desenvolvimento local da aplicação.
 
 ## 🚀 Como Executar o Projeto
 
-### 1. Pré-requisitos
-
-Tenha instalado:
-
-- Node.js
-- npm
-- UI5 CLI
-
----
-
-### 2. Clonar o projeto
+Pré-requisito: Node.js 20 ou superior. O UI5 CLI vem como dependência do projeto (não precisa instalar global).
 
 ```bash
 git clone https://github.com/douglasabnovato/learning-portal-fiori-sap.git
-```
-
-Entre na pasta:
-
-```bash
 cd learning-portal-fiori-sap
-```
-
----
-
-### 3. Instalar dependências
-
-```bash
 npm install
+npm start            # abre http://localhost:8080/index.html
 ```
 
----
+A biblioteca OpenUI5 1.136 é baixada pelo UI5 CLI (definida em `ui5.yaml`) e servida localmente, sem CDN.
 
-### 4. Iniciar o servidor
+### Rotas
+
+| Hash | Tela |
+|---|---|
+| `#/` | Catálogo com busca, filtro por status e contagem |
+| `#/trilha/{Id}` | Detalhe da trilha (Id inexistente mostra "Trilha não encontrada.") |
+
+### Testes
 
 ```bash
-ui5 serve
+npx playwright install chromium   # só na primeira vez
+npm test
 ```
 
-O UI5 Server é o fluxo recomendado para desenvolvimento local; o build é utilizado posteriormente para gerar a aplicação otimizada para distribuição/deploy. :contentReference[oaicite:1]{index=1}
+Roda os testes QUnit do `model/formatter.js` (progresso, status e estado são calculados a partir de `Concluidos` e `ModulosCount`) e um smoke test no navegador: lista, busca, detalhe e rota inexistente. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
 
----
+### Publicar (gratuito)
 
-### 5. Acessar a aplicação
-
-Abra:
-
-```text
-http://localhost:8080
+```bash
+npm run build        # gera dist/ autocontido
 ```
+
+O workflow (`ci/github-actions-ci.yml`, a ser movido para `.github/workflows/ci.yml`) testa, gera o `dist/` e o publica no GitHub Pages a cada push na `main`.
+
+### Em produção
+
+- URL: https://douglasabnovato.github.io/learning-portal-fiori-sap/
+- Hospedagem: GitHub Pages (gratuito), publicado pelo GitHub Actions
+- Passo a passo: [docs/DEPLOY.md](docs/DEPLOY.md)
+
+### Dados
+
+Edite `webapp/model/trilhas.json`. Informe só `ModulosCount` e `Concluidos`: o percentual e o status são derivados, não gravados.
 
 ---
 
@@ -473,14 +468,14 @@ O projeto continuará evoluindo em etapas.
 
 ### Pesquisa
 
-- [ ] Adicionar `SearchField`
-- [ ] Implementar busca por título
-- [ ] Implementar filtros utilizando `Filter`
-- [ ] Criar estado visual para nenhum resultado
+- [x] Adicionar `SearchField`
+- [x] Implementar busca por título
+- [x] Implementar filtros utilizando `Filter`
+- [x] Criar estado visual para nenhum resultado
 
 ### Filtros
 
-- [ ] Criar filtro por status
+- [x] Criar filtro por status
 - [ ] Exibir quantidade de trilhas por status
 - [ ] Adicionar filtro de favoritos
 
@@ -555,13 +550,13 @@ Implementar navegação real entre as telas utilizando o Router do SAPUI5.
 
 Objetivos:
 
-- [ ] Configurar `routing` no `manifest.json`
-- [ ] Configurar targets
-- [ ] Criar rota para detalhes
-- [ ] Implementar `Detail.view.xml`
-- [ ] Implementar `Detail.controller.js`
-- [ ] Passar o ID da trilha pela rota
-- [ ] Substituir o fluxo de diálogo por navegação
+- [x] Configurar `routing` no `manifest.json`
+- [x] Configurar targets
+- [x] Criar rota para detalhes
+- [x] Implementar `Detail.view.xml`
+- [x] Implementar `Detail.controller.js`
+- [x] Passar o ID da trilha pela rota
+- [x] Substituir o fluxo de diálogo por navegação
 
 ---
 
@@ -593,12 +588,12 @@ Adicionar práticas de qualidade e engenharia de software.
 
 ### Testes
 
-- [ ] QUnit
+- [x] QUnit
 - [ ] Testes de Controller
 - [ ] Testes de Data Binding
 - [ ] Testes de filtros
 - [ ] OPA5
-- [ ] Testes de navegação
+- [x] Testes de navegação
 
 ### Qualidade de código
 
@@ -610,9 +605,9 @@ Adicionar práticas de qualidade e engenharia de software.
 ### Acessibilidade
 
 - [ ] Revisar navegação por teclado
-- [ ] Revisar labels
+- [x] Revisar labels
 - [ ] Revisar estados semânticos
-- [ ] Validar acessibilidade dos componentes
+- [x] Validar acessibilidade dos componentes
 
 ---
 
@@ -637,10 +632,10 @@ GitHub Actions
 
 Objetivos:
 
-- [ ] Criar pipeline GitHub Actions
+- [x] Criar pipeline GitHub Actions
 - [ ] Executar lint automaticamente
-- [ ] Executar testes automaticamente
-- [ ] Executar `ui5 build`
+- [x] Executar testes automaticamente
+- [x] Executar `ui5 build`
 - [ ] Gerar artefato de produção
 - [ ] Automatizar deploy
 

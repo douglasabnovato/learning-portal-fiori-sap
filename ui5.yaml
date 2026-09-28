@@ -1,4 +1,13 @@
-specVersion: "3.0"
-type: application
+# Configuração do UI5 Tooling: OpenUI5 baixado do npm para servir, testar e gerar build independente de CDN
+specVersion: "4.0"
 metadata:
   name: learning-portal-fiori-sap
+type: application
+framework:
+  name: OpenUI5
+  version: "1.136.0"
+  libraries:
+    - name: sap.m
+    - name: sap.f
+    - name: sap.ui.core
+    - name: themelib_sap_horizon
