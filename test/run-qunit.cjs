@@ -41,6 +41,11 @@ async function main() {
     await app.locator(".sapFCard button").first().click();
     await app.waitForURL(/#\/trilha\/4$/);
     checks.push(["detalhe pelo Id", await app.getByText("AI Assistant - Joule & GenAI").first().isVisible()]);
+    await app.locator("button", { hasText: "Concluir módulo" }).click();
+    await app.reload();
+    await app.locator("button", { hasText: "Concluir módulo" }).waitFor({ timeout: 60000 });
+    await app.waitForTimeout(500);
+    checks.push(["progresso restaurado ao recarregar", (await app.locator(".sapMPI:visible").first().innerText()).includes("50%")]);
     await app.goto(`${BASE}/index.html#/trilha/999`);
     await app.waitForTimeout(800);
     checks.push(["id inexistente mostra aviso", await app.getByText("Trilha não encontrada.").isVisible()]);

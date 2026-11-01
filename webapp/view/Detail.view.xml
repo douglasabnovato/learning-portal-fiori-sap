@@ -28,6 +28,10 @@
                                 displayValue="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.percentual' }"
                                 state="{ parts: ['Concluidos', 'ModulosCount'], formatter: '.formatter.estado' }"
                                 tooltip="{i18n>progressLabel}" width="100%" class="sapUiSmallMarginTop" />
+                            <HBox class="sapUiSmallMarginTop">
+                                <Button id="completeModule" text="{i18n>completeModule}" type="Emphasized" press=".onCompleteModule" class="sapUiTinyMarginEnd" />
+                                <Button id="undoModule" text="{i18n>undoModule}" press=".onUndoModule" />
+                            </HBox>
                         </VBox>
                     </content>
                 </Panel>
