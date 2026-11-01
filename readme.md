@@ -729,3 +729,10 @@ Projeto desenvolvido para estudo, portfólio e aprofundamento prático no desenv
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença ISC para fins educacionais e de portfólio profissional.
+
+## Próximos passos do responsável
+
+- Em Settings > Pages, escolher GitHub Actions como origem.
+- Rodar o workflow manual `deploy.yml`.
+
+Acompanhamento na issue #3.
