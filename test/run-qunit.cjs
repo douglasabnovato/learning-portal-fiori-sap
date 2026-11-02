@@ -49,6 +49,23 @@ async function main() {
     await app.goto(`${BASE}/index.html#/trilha/999`);
     await app.waitForTimeout(800);
     checks.push(["id inexistente mostra aviso", await app.getByText("Trilha não encontrada.").isVisible()]);
+    /* Teclado: o primeiro botão de card abre o detalhe só com Tab e Enter */
+    const kb = await context.newPage();
+    await kb.goto(`${BASE}/index.html`);
+    await kb.waitForSelector(".sapFCard", { timeout: 60000 });
+    let abriu = false;
+    for (let i = 0; i < 25 && !abriu; i += 1) {
+      await kb.keyboard.press("Tab");
+      abriu = await kb.evaluate(() => document.activeElement?.closest(".sapFCard") !== null && document.activeElement?.tagName === "BUTTON");
+    }
+    if (abriu) { await kb.keyboard.press("Enter"); await kb.waitForTimeout(800); }
+    checks.push(["detalhe aberto pelo teclado", abriu && /#\/trilha\//.test(kb.url())]);
+    /* Falha de rede nas trilhas mostra o aviso */
+    const off = await context.newPage();
+    await off.route("**/model/trilhas.json", (r) => r.abort());
+    await off.goto(`${BASE}/index.html`);
+    await off.getByText("Não foi possível carregar as trilhas").waitFor({ timeout: 60000 }).catch(() => {});
+    checks.push(["falha ao carregar mostra aviso", await off.getByText("Não foi possível carregar as trilhas").isVisible()]);
     for (const [name, ok] of checks) { console.log(`${ok ? "ok  " : "FALHA"} ${name}`); if (!ok) failures += 1; }
   } finally {
     await browser.close();

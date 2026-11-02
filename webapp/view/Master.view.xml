@@ -32,7 +32,9 @@
                     <Text id="countText" text="{view>/count}" />
                 </OverflowToolbar>
 
-                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{i18n>noTracksFound}" visible="{= ${view>/count} === 0 }" />
+                <MessageStrip id="loadError" text="{i18n>loadError}" type="Error" showIcon="true" visible="{= ${/LoadError} === true }" class="sapUiSmallMarginBottom" />
+
+                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{i18n>noTracksFound}" visible="{= ${view>/count} === 0 &amp;&amp; ${/LoadError} !== true }" />
 
                 <f:GridContainer id="trilhasGrid" items="{/Trilhas}" snapToRow="false" ariaLabelledBy="trilhasTitle">
                     <f:layout>
