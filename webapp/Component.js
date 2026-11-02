@@ -16,9 +16,16 @@ sap.ui.define([
         init: function () {
             UIComponent.prototype.init.apply(this, arguments);
             var oModel = this.getModel();
-            oModel.dataLoaded().then(function () {
-                oModel.setProperty("/Trilhas", progress.restore(oModel.getProperty("/Trilhas") || [], progress.load()));
-            });
+            /* Sem trilhas depois do carregamento: a lista mostra um aviso, em vez de só "0 trilhas" */
+            var fnLoaded = function () {
+                var aTrilhas = oModel.getProperty("/Trilhas");
+                if (!aTrilhas) {
+                    oModel.setProperty("/LoadError", true);
+                    return;
+                }
+                oModel.setProperty("/Trilhas", progress.restore(aTrilhas, progress.load()));
+            };
+            oModel.dataLoaded().then(fnLoaded, fnLoaded);
             this.getRouter().initialize();
         }
     });
