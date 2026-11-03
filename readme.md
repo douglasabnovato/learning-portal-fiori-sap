@@ -58,6 +58,14 @@ O modelo é disponibilizado pela configuração da aplicação e utilizado atrav
 
 ---
 
+### 🧭 Resumo da jornada e ordenação
+
+O topo do catálogo mostra cinco números: trilhas, em andamento, concluídas, progresso geral e horas estudadas. O progresso geral soma os módulos de todas as trilhas, para uma trilha curta não pesar igual a uma longa. O atalho **Continuar** abre a trilha em andamento mais adiantada.
+
+O catálogo pode ser ordenado por título, maior progresso ou menor carga horária, e volta à ordem original. O cálculo fica em `webapp/model/resumo.js`, com testes em `webapp/test/unit/resumo.qunit.js`.
+
+---
+
 ### 🃏 Cards de Aprendizagem
 
 As trilhas são apresentadas utilizando:
@@ -327,7 +335,7 @@ A biblioteca OpenUI5 1.136 é baixada pelo UI5 CLI (definida em `ui5.yaml`) e se
 
 | Hash | Tela |
 |---|---|
-| `#/` | Catálogo com busca, filtro por status e contagem |
+| `#/` | Resumo da jornada e catálogo com busca, filtro por status, ordenação e contagem |
 | `#/trilha/{Id}` | Detalhe da trilha (Id inexistente mostra "Trilha não encontrada.") |
 
 ### Testes
@@ -337,7 +345,7 @@ npx playwright install chromium   # só na primeira vez
 npm test
 ```
 
-Roda os testes QUnit do `model/formatter.js` (progresso, status e estado são calculados a partir de `Concluidos` e `ModulosCount`) e um smoke test no navegador: lista, busca, detalhe e rota inexistente. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
+Roda os testes QUnit de `model/formatter.js`, `model/progress.js` e `model/resumo.js` (37 asserções) e 15 checagens no navegador: lista, resumo, ordenação, busca, detalhe, progresso salvo, teclado, falha ao carregar e rota inexistente. O CI roda o mesmo comando nos PRs para a `main` e para `developer/**`. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
 
 ### Publicar (gratuito)
 
@@ -345,11 +353,11 @@ Roda os testes QUnit do `model/formatter.js` (progresso, status e estado são ca
 npm run build        # gera dist/ autocontido
 ```
 
-O workflow (`ci/github-actions-ci.yml`, a ser movido para `.github/workflows/ci.yml`) testa, gera o `dist/` e o publica no GitHub Pages a cada push na `main`.
+O CI (`.github/workflows/ci.yml`) testa e gera o `dist/`. A publicação no GitHub Pages é manual: o workflow `deploy.yml` roda os testes antes de publicar. O Pages ainda não está ligado (#3).
 
 ### Em produção
 
-- URL: https://douglasabnovato.github.io/learning-portal-fiori-sap/
+- URL (ainda não publicada, #3): https://douglasabnovato.github.io/learning-portal-fiori-sap/
 - Hospedagem: GitHub Pages (gratuito), publicado pelo GitHub Actions
 - Passo a passo: [docs/DEPLOY.md](docs/DEPLOY.md)
 
@@ -481,9 +489,9 @@ O projeto continuará evoluindo em etapas.
 
 ### Ordenação
 
-- [ ] Ordenar por progresso
-- [ ] Ordenar por título
-- [ ] Ordenar por carga horária
+- [x] Ordenar por progresso
+- [x] Ordenar por título
+- [x] Ordenar por carga horária
 
 ### Favoritos
 
@@ -520,6 +528,8 @@ Indicadores planejados:
 │      57%         │
 └──────────────────┘
 ```
+
+Feito em 03/11/2026: os quatro indicadores acima, horas estudadas e "Continuar" (próxima trilha recomendada).
 
 Também estão previstos:
 
@@ -636,6 +646,7 @@ Objetivos:
 - [ ] Executar lint automaticamente
 - [x] Executar testes automaticamente
 - [x] Executar `ui5 build`
+- [x] Rodar o CI nos PRs para a branch de sprint
 - [ ] Gerar artefato de produção
 - [ ] Automatizar deploy
 
@@ -730,9 +741,20 @@ Projeto desenvolvido para estudo, portfólio e aprofundamento prático no desenv
 
 Este projeto é distribuído sob a licença ISC para fins educacionais e de portfólio profissional.
 
-## Próximos passos do responsável
+## Próximos passos
 
-- Em Settings > Pages, escolher GitHub Actions como origem.
-- Rodar o workflow manual `deploy.yml`.
+Estado do MVP em [`docs/MVP.md`](docs/MVP.md); plano em [`docs/PLANO-DE-ACAO.md`](docs/PLANO-DE-ACAO.md).
 
-Acompanhamento na issue #3.
+**Do responsável**
+
+- #3: em Settings > Pages, escolher GitHub Actions como origem e rodar o workflow **Publicar**.
+- #14: proteger a `main` com PR e CI obrigatórios.
+- #16: escolher a ferramenta de medição de uso, sem dados pessoais.
+- #17: confirmar ou trocar a hipótese e a meta.
+
+**Do agente**
+
+- #15: medir LCP e acessibilidade no site publicado (depois da #3).
+- #20: lista de módulos no detalhe da trilha.
+- #18: favoritos.
+- #19: ESLint e teste OPA5 no CI.
