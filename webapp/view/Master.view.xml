@@ -15,6 +15,37 @@
 
                 <MessageStrip text="{i18n>welcomeMessage}" type="Information" showIcon="true" class="sapUiMediumMarginBottom" />
 
+                <!-- Resumo da jornada: números calculados dos módulos (model/resumo.js) -->
+                <VBox id="summary" visible="{= ${/LoadError} !== true }" class="sapUiMediumMarginBottom">
+                    <Title id="summaryTitle" text="{i18n>summaryTitle}" level="H2" titleStyle="H4" class="sapUiSmallMarginBottom" />
+                    <FlexBox wrap="Wrap" alignItems="Start">
+                        <VBox class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+                            <Label text="{i18n>summaryTracks}" />
+                            <ObjectNumber id="kpiTotal" number="{view>/resumo/total}" class="sapMObjectNumberLarge" />
+                        </VBox>
+                        <VBox class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+                            <Label text="{i18n>filterInProgress}" />
+                            <ObjectNumber id="kpiAndamento" number="{view>/resumo/emAndamento}" state="Information" class="sapMObjectNumberLarge" />
+                        </VBox>
+                        <VBox class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+                            <Label text="{i18n>filterDone}" />
+                            <ObjectNumber id="kpiConcluidas" number="{view>/resumo/concluidas}" state="Success" class="sapMObjectNumberLarge" />
+                        </VBox>
+                        <VBox class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+                            <Label text="{i18n>summaryOverall}" />
+                            <ObjectNumber id="kpiGeral" number="{view>/resumo/progressoGeral}" unit="%" class="sapMObjectNumberLarge" />
+                        </VBox>
+                        <VBox class="sapUiMediumMarginEnd sapUiSmallMarginBottom">
+                            <Label text="{i18n>summaryHours}" />
+                            <ObjectNumber id="kpiHoras" number="{view>/resumo/horasFeitas}" unit="{= '/ ' + ${view>/resumo/horasTotal} + ' h' }" class="sapMObjectNumberLarge" />
+                        </VBox>
+                    </FlexBox>
+                    <HBox id="continueBox" alignItems="Center" visible="{= !!${view>/resumo/continuar} }">
+                        <Label text="{i18n>summaryContinue}" class="sapUiTinyMarginEnd" />
+                        <Link id="continueLink" text="{view>/resumo/continuar/Titulo}" press=".onContinue" />
+                    </HBox>
+                </VBox>
+
                 <Title id="trilhasTitle" text="{i18n>trilhasHeader}" level="H2" titleStyle="H4" class="sapUiSmallMarginBottom" />
 
                 <OverflowToolbar class="sapUiSmallMarginBottom" style="Clear">
@@ -28,6 +59,15 @@
                             <SegmentedButtonItem key="Concluído" text="{i18n>filterDone}" />
                         </items>
                     </SegmentedButton>
+                    <Label id="sortLabel" text="{i18n>sortLabel}" labelFor="sortSelect" />
+                    <Select id="sortSelect" ariaLabelledBy="sortLabel" selectedKey="catalogo" change=".onSort">
+                        <items>
+                            <core:Item key="catalogo" text="{i18n>sortCatalog}" />
+                            <core:Item key="titulo" text="{i18n>sortTitle}" />
+                            <core:Item key="progresso" text="{i18n>sortProgress}" />
+                            <core:Item key="horas" text="{i18n>sortHours}" />
+                        </items>
+                    </Select>
                     <ToolbarSpacer />
                     <Text id="countText" text="{view>/count}" />
                 </OverflowToolbar>
