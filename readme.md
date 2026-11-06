@@ -6,6 +6,31 @@ O projeto simula um **portal de aprendizagem tecnológica**, permitindo visualiz
 
 ---
 
+## Estado e próximos passos (ciclo de 03/11/2026)
+
+Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 06/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
+
+**O que foi feito**
+- Resumo da jornada (5 números) e atalho "Continuar", com testes ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
+- Ordenação do catálogo por título, progresso e carga horária ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
+- CI também nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
+- Aviso de falha ao carregar as trilhas e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)).
+- Progresso das trilhas salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
+
+**O que queremos fazer**
+- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Publicar a demonstração no GitHub Pages (responsável).
+- [#14](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/14) Proteger a `main` com PR e CI obrigatórios (responsável).
+- [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado (responsável).
+- [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Medir o uso sem dados pessoais (responsável).
+- [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta do MVP (responsável).
+- [#18](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/18) Favoritos nas trilhas.
+- [#19](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/19) ESLint e teste OPA5 no CI.
+- [#20](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/20) Lista de módulos no detalhe da trilha.
+
+**Onde está a documentação**
+- Estado e critérios: [docs/MVP.md](docs/MVP.md).
+- Plano do ciclo: [docs/PLANO-DE-ACAO.md](docs/PLANO-DE-ACAO.md), seção "Ciclo de 03/11/2026".
+
 ## 🎯 Objetivo do Projeto
 
 O objetivo do Learning Portal Fiori SAP é construir uma aplicação que represente, de forma prática, uma solução corporativa moderna utilizando:
