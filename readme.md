@@ -6,25 +6,23 @@ O projeto simula um **portal de aprendizagem tecnológica**, permitindo visualiz
 
 ---
 
-## Estado e próximos passos (ciclo de 03/11/2026)
+## Estado e próximos passos (ciclo de 10/11/2026)
 
-Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 06/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
+Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 10/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
 
-Critérios do MVP (N2): 7 de 12 atendidos em 10/11/2026 ([docs/MVP.md](docs/MVP.md)). A `main` está protegida desde 10/11/2026: só recebe mudanças por PR.
+Critérios do MVP (N2): 8 de 12 atendidos em 10/11/2026 ([docs/MVP.md](docs/MVP.md)). A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
 
 **O que foi feito**
-- `main` protegida pelo ruleset `principal-protegida`; critério 10 atende (10/11/2026).
-- Resumo da jornada (5 números) e atalho "Continuar", com testes ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
-- Ordenação do catálogo por título, progresso e carga horária ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
-- CI também nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
-- Aviso de falha ao carregar as trilhas e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)).
-- Progresso das trilhas salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
+- Medição de uso sem cookie (GoatCounter, código `douglasabnovato`): só no site publicado, com o evento `abrir-trilha` e teste no navegador. Falta a conta ([#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16)).
+- O `deploy.yml` passa a publicar a cada push na `main` quando a variável `PAGES_VIA_ACTIONS` for `true`; continua testando antes de publicar.
+- Meta da hipótese decidida no ciclo de 10/11/2026 (revisável).
+- Antes: `main` protegida (10/11), resumo da jornada, ordenação e CI nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)), aviso de falha e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)), progresso salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
 
 **O que queremos fazer**
-- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Publicar a demonstração no GitHub Pages (responsável).
-- [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado (responsável).
-- [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Medir o uso sem dados pessoais (responsável).
-- [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta do MVP (responsável).
+- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Ligar o Pages e publicar (responsável).
+- [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Criar a conta do GoatCounter (responsável).
+- [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado, depois da #3.
+- [#27](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/27) Validar com uma pessoa de fora.
 - [#18](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/18) Favoritos nas trilhas.
 - [#19](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/19) ESLint e teste OPA5 no CI.
 - [#20](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/20) Lista de módulos no detalhe da trilha.
