@@ -10,7 +10,10 @@ O projeto simula um **portal de aprendizagem tecnológica**, permitindo visualiz
 
 Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 06/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
 
+Critérios do MVP (N2): 7 de 12 atendidos em 10/11/2026 ([docs/MVP.md](docs/MVP.md)). A `main` está protegida desde 10/11/2026: só recebe mudanças por PR.
+
 **O que foi feito**
+- `main` protegida pelo ruleset `principal-protegida`; critério 10 atende (10/11/2026).
 - Resumo da jornada (5 números) e atalho "Continuar", com testes ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
 - Ordenação do catálogo por título, progresso e carga horária ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
 - CI também nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)).
@@ -19,7 +22,6 @@ Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.
 
 **O que queremos fazer**
 - [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Publicar a demonstração no GitHub Pages (responsável).
-- [#14](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/14) Proteger a `main` com PR e CI obrigatórios (responsável).
 - [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado (responsável).
 - [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Medir o uso sem dados pessoais (responsável).
 - [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta do MVP (responsável).
@@ -773,7 +775,6 @@ Estado do MVP em [`docs/MVP.md`](docs/MVP.md); plano em [`docs/PLANO-DE-ACAO.md`
 **Do responsável**
 
 - #3: em Settings > Pages, escolher GitHub Actions como origem e rodar o workflow **Publicar**.
-- #14: proteger a `main` com PR e CI obrigatórios.
 - #16: escolher a ferramenta de medição de uso, sem dados pessoais.
 - #17: confirmar ou trocar a hipótese e a meta.
 

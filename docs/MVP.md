@@ -4,9 +4,11 @@
 
 **Nível:** Vitrine (N2). Os 12 critérios se aplicam.
 
-**Resultado em 03/11/2026:** 6 de 12 critérios atendidos (1, 4, 6, 9, 11, 12); 5 parciais (2, 3, 8, 10 e 7, que não foi medido) e 1 não atendido (5). O resumo anterior dizia 5 de 12, mas a tabela já tinha 6.
+**Resumo:** 7 de 12 aplicáveis atendidos
 
-**Finalizado: sim.** Pela regra do ciclo, todo critério que não atende depende do responsável e tem issue aberta com o rótulo `depende-do-responsavel`: 2 (#17), 3 (#3), 5 (#16), 7 e 8 (#15, que espera a #3) e 10 (#14).
+**Finalizado:** sim
+
+**Estado em 10/11/2026:** 7 de 12 critérios atendidos (1, 4, 6, 9, 10, 11, 12); 4 parciais (2, 3, 8 e 7, que não foi medido) e 1 não atendido (5). O 10 passou a "Atende" em 10/11/2026: a `main` está protegida pelo ruleset `principal-protegida` (#14). Pela regra do ciclo, todo critério que não atende depende do responsável e tem issue aberta com o rótulo `depende-do-responsavel`: 2 (#17), 3 (#3), 5 (#16), 7 e 8 (#15, que espera a #3).
 
 ## Problema e hipótese
 
@@ -27,7 +29,7 @@
 | 7 | Desempenho aceitável | LCP de até 2,5 s no celular | Parcial: não medido, sem site no ar | #15 (espera a #3) | 03/11/2026 |
 | 8 | Acessibilidade básica | Lighthouse e teclado | Parcial: abrir o detalhe por teclado tem teste no CI; só controles nativos; Lighthouse no ar não medido | #15 | 03/11/2026 |
 | 9 | Segurança e conformidade | Riscos decididos; termos de terceiros cumpridos | Atende: sem dados pessoais; varredura de segredos sem achado | `git grep` do guia de estado | 03/11/2026 |
-| 10 | Entrega confiável | Publicação só depois de CI verde | Parcial: CI em PRs para `main` e `developer/**`; `deploy.yml` testa antes de publicar; `main` sem proteção (API 404) | #14 | 03/11/2026 |
+| 10 | Entrega confiável | Publicação só depois de CI verde | Atende: `gh api repos/douglasabnovato/learning-portal-fiori-sap/rulesets`, em 10/11/2026: ruleset `principal-protegida` ativo (exige PR, bloqueia force push e exclusão); workflow `CI` roda nos PRs para `main` e `developer/**`; `deploy.yml` testa antes de publicar | `gh api repos/douglasabnovato/learning-portal-fiori-sap/rules/branches/main` (deletion, non_fast_forward, pull_request); #14 | 10/11/2026 |
 | 11 | Testes dos fluxos críticos | Testes automatizados no CI | Atende: 37 asserções QUnit e 15 checagens no navegador | CI do PR do ciclo | 03/11/2026 |
 | 12 | Documentação honesta | Qualquer pessoa roda o projeto, e os números estão certos | Atende: README e este resumo revistos | Este arquivo, `readme.md` | 03/11/2026 |
 
@@ -40,7 +42,7 @@
 | 3 | Salvar o progresso no navegador | Feito (#6) |
 | 4 | Resumo da jornada, "Continuar" e ordenação | Feito (#13) |
 | 5 | CI nos PRs para a `developer` | Feito neste ciclo |
-| 6 | Proteger a `main` | Com o responsável (#14) |
+| 6 | Proteger a `main` | Feito em 10/11/2026 (#14) |
 | 7 | Medir LCP e acessibilidade no ar | Depois da #3 (#15) |
 
 ## 3. Fora do MVP
