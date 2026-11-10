@@ -29,6 +29,10 @@ sap.ui.define([
                 this.byId("detailContent").setVisible(bFound);
                 if (bFound) {
                     this.getView().bindElement({ path: "/Trilhas/" + iIndex });
+                    /* Evento do fluxo principal, sem dado pessoal; o GoatCounter só existe no site publicado */
+                    if (window.goatcounter && window.goatcounter.count) {
+                        window.goatcounter.count({ path: "abrir-trilha", title: "abrir-trilha", event: true });
+                    }
                 } else {
                     this.getView().unbindElement();
                 }
