@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Portal de trilhas de estudo em SAPUI5, Fiori, ABAP Cloud, BTP e IA.">
     <title>Learning Portal Fiori SAP</title>
+    <!-- Medição sem cookie (GoatCounter, decisão D5 de 10/11/2026): só no site publicado; dev e testes rodam em localhost -->
+    <script>
+        (function () {
+            var h = window.location.hostname;
+            if (h === "" || h === "localhost" || h === "127.0.0.1" || h === "[::1]") { return; }
+            var s = document.createElement("script");
+            s.async = true;
+            s.src = "https://gc.zgo.at/count.js";
+            s.setAttribute("data-goatcounter", "https://douglasabnovato.goatcounter.com/count");
+            document.head.appendChild(s);
+        })();
+    </script>
     <!-- Bootstrap local (UI5 Tooling em desenvolvimento; incluído no build self-contained). Antes dependia do CDN ui5.sap.com -->
     <script id="sap-ui-bootstrap" src="resources/sap-ui-core.js"
         data-sap-ui-theme="sap_horizon"

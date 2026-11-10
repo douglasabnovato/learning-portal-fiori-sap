@@ -30,7 +30,8 @@ async function waitServer(timeoutMs = 90000) {
 async function main() {
   const server = spawn(process.platform === "win32" ? "npx.cmd" : "npx", ["ui5", "serve", "--port", String(PORT)], { stdio: "ignore", shell: process.platform === "win32" });
   let failures = 0;
-  const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
+  /* portal.test aponta para o servidor local e faz o papel do site publicado no teste da medição */
+  const browser = await chromium.launch({ args: ["--host-resolver-rules=MAP portal.test 127.0.0.1"], ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) });
   try {
     await waitServer();
     const context = await browser.newContext({ locale: "pt-BR" });
@@ -106,6 +107,23 @@ async function main() {
     await off.goto(`${BASE}/index.html`);
     await off.getByText("Não foi possível carregar as trilhas").waitFor({ timeout: 60000 }).catch(() => {});
     checks.push(["falha ao carregar mostra aviso", await off.getByText("Não foi possível carregar as trilhas").isVisible()]);
+    /* Medição (D5): nada do GoatCounter em localhost; no "site publicado", o script carrega e o detalhe conta o evento */
+    const pedidosGc = [];
+    context.on("request", (r) => { if (r.url().startsWith("https://gc.zgo.at/")) pedidosGc.push(r.url()); });
+    const local = await context.newPage();
+    await local.goto(`${BASE}/index.html#/trilha/4`);
+    await local.locator("button", { hasText: "Concluir módulo" }).waitFor({ timeout: 60000 });
+    checks.push(["medição não carrega em localhost", (await local.locator("script[data-goatcounter]").count()) === 0 && pedidosGc.length === 0]);
+    const pub = await context.newPage();
+    await pub.route("https://gc.zgo.at/count.js", (r) => r.fulfill({ contentType: "text/javascript", body: "window.goatcounter = { count: function (o) { (window.__eventos = window.__eventos || []).push(o); } };" }));
+    await pub.goto(`http://portal.test:${PORT}/index.html`);
+    await pub.waitForSelector(".sapFCard", { timeout: 60000 });
+    const endereco = await pub.locator("script[data-goatcounter]").getAttribute("data-goatcounter");
+    checks.push(["medição carrega no site com o código do portfólio", endereco === "https://douglasabnovato.goatcounter.com/count"]);
+    await pub.waitForFunction(() => window.goatcounter && window.goatcounter.count, null, { timeout: 10000 }).catch(() => {});
+    await pub.goto(`http://portal.test:${PORT}/index.html#/trilha/4`);
+    await pub.waitForFunction(() => (window.__eventos || []).some((e) => e.path === "abrir-trilha" && e.event === true), null, { timeout: 10000 }).catch(() => {});
+    checks.push(["abrir a trilha conta o evento abrir-trilha", await pub.evaluate(() => (window.__eventos || []).some((e) => e.path === "abrir-trilha" && e.event === true))]);
     for (const [name, ok] of checks) { console.log(`${ok ? "ok  " : "FALHA"} ${name}`); if (!ok) failures += 1; }
   } finally {
     await browser.close();
