@@ -30,3 +30,4 @@ flowchart TB
 | ADR-03 | Router do UI5 com hash | Funciona em hospedagem estática sem reescrita | Diálogo (original) |
 | ADR-04 | UI5 local via `ui5.yaml` (framework OpenUI5 1.136) | Sem dependência de CDN; build self-contained | Bootstrap do CDN |
 | ADR-05 | Smoke com Playwright em vez de OPA5 | Roda headless no CI sem Karma | OPA5 + Karma (próximo ciclo) |
+| [ADR-06](adr/0006-aceitar-alertas-de-desenvolvimento.md) | Aceitar os alertas de desenvolvimento do Dependabot (`sigstore`, `@sigstore/core`, `minimatch`) | Ordem do responsável de 16/11/2026; vêm do `@ui5/cli` e não entram no `dist/` | `overrides` com versões maiores na ferramenta de build |
