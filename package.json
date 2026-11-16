@@ -11,7 +11,8 @@
   "license": "ISC",
   "description": "Portal de trilhas de estudo em SAPUI5/Fiori (OpenUI5 no desenvolvimento)",
   "devDependencies": {
-    "@ui5/cli": "^4.0.70",
-    "playwright": "^1.63.0"
+    "@axe-core/playwright": "^4.14.0",
+    "@ui5/cli": "^4.0.73",
+    "playwright": "^1.65.1"
   }
 }

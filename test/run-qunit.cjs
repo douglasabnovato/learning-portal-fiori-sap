@@ -1,6 +1,7 @@
-/* Executor de testes: sobe o "ui5 serve", roda o QUnit e um teste de fumaça do app (lista, resumo, ordenação, busca, detalhe e 404) no Chromium headless */
+/* Executor de testes: sobe o "ui5 serve", roda o QUnit e as checagens do app no Chromium headless (lista, resumo, ordenação, busca, detalhe, 404, progresso, favoritos, teclado, foco, Esc, falhas, medição e axe) */
 const { spawn } = require("node:child_process");
 const { chromium } = require("playwright");
+const AxeBuilder = require("@axe-core/playwright").default;
 const TRILHAS = require("../webapp/model/trilhas.json").Trilhas;
 
 /* Valores esperados do resumo, calculados direto do JSON (módulos somados) */
@@ -35,6 +36,7 @@ async function main() {
   try {
     await waitServer();
     const context = await browser.newContext({ locale: "pt-BR" });
+    context.setDefaultNavigationTimeout(60000); /* o UI5 sem build pede centenas de módulos; com a máquina ocupada, 30 s não bastam */
     const page = await context.newPage();
     await page.goto(`${BASE}/test/unit/unitTests.qunit.html`);
     await page.waitForFunction(() => window.QUnit && document.querySelector("#qunit-testresult .total"), null, { timeout: 60000 });
@@ -65,6 +67,10 @@ async function main() {
     checks.push([`ordenar por título começa em "${PRIMEIRA_AZ}"`, (await primeiroCard()) === PRIMEIRA_AZ]);
     await ordenar("Ordem do catálogo");
     checks.push(["ordem do catálogo restaurada", (await primeiroCard()) === TRILHAS[0].Titulo]);
+    /* Busca sem resultado mostra o estado vazio (antes ele nunca aparecia) */
+    await app.locator("input[type=search]").fill("trilha-que-nao-existe");
+    await app.waitForTimeout(500);
+    checks.push(["busca vazia mostra o estado vazio", (await app.locator(".sapFCard").count()) === 0 && await app.getByText("Nenhuma trilha encontrada.").first().isVisible()]);
     await app.locator("input[type=search]").fill("Joule");
     await app.waitForTimeout(500);
     checks.push(["busca filtra", (await app.locator(".sapFCard").count()) === 1]);
@@ -107,6 +113,101 @@ async function main() {
     await off.goto(`${BASE}/index.html`);
     await off.getByText("Não foi possível carregar as trilhas").waitFor({ timeout: 60000 }).catch(() => {});
     checks.push(["falha ao carregar mostra aviso", await off.getByText("Não foi possível carregar as trilhas").isVisible()]);
+    /* Favoritos (#18): marcar, recarregar, filtrar e o estado vazio */
+    const fav = await context.newPage();
+    await fav.goto(`${BASE}/index.html`);
+    await fav.waitForSelector(".sapFCard", { timeout: 60000 });
+    const estrela = (p) => p.locator(".sapFCard").first().locator("button[aria-pressed]");
+    checks.push([`favorito com nome acessível "Favoritar: ${TRILHAS[0].Titulo}"`, (await estrela(fav).getAttribute("title")) === `Favoritar: ${TRILHAS[0].Titulo}` && (await estrela(fav).getAttribute("aria-pressed")) === "false"]);
+    await estrela(fav).click();
+    await fav.reload();
+    await fav.waitForSelector(".sapFCard", { timeout: 60000 });
+    await fav.waitForTimeout(500);
+    checks.push(["favorito restaurado ao recarregar", (await estrela(fav).getAttribute("aria-pressed")) === "true"]);
+    await fav.locator('[id$="--favoriteOnly"]').click();
+    await fav.waitForTimeout(500);
+    checks.push(["só favoritas mostra 1 card", (await fav.locator(".sapFCard").count()) === 1 && (await fav.locator(".sapFCard button").first().getAttribute("title")) === TRILHAS[0].Titulo]);
+    await estrela(fav).click();
+    await fav.waitForTimeout(500);
+    checks.push(["sem favoritas mostra o estado vazio", (await fav.locator(".sapFCard").count()) === 0 && await fav.getByText("Nenhuma trilha favorita.").first().isVisible()]);
+    /* Com uma favorita marcada, a busca sem resultado mostra o aviso comum, não o de "nenhuma favorita" */
+    await fav.locator('[id$="--favoriteOnly"]').click();
+    await fav.waitForTimeout(500);
+    await estrela(fav).click();
+    await fav.waitForTimeout(300);
+    await fav.locator('[id$="--favoriteOnly"]').click();
+    await fav.locator("input[type=search]").fill("trilha-que-nao-existe");
+    await fav.waitForTimeout(500);
+    checks.push(["com favorita, busca vazia mostra o aviso comum", (await fav.locator(".sapFCard").count()) === 0 && await fav.getByText("Nenhuma trilha encontrada.").first().isVisible() && (await fav.getByText("Nenhuma trilha favorita.").count()) === 0]);
+    /* Acessibilidade: axe (WCAG 2.1 A e AA) em largura de desktop, com as 11 trilhas reais.
+       O app só tem o tema sap_horizon (claro); não há tema escuro próprio para testar. */
+    const a11y = await browser.newContext({ locale: "pt-BR", viewport: { width: 1280, height: 800 } });
+    a11y.setDefaultNavigationTimeout(60000);
+    const axe = async (p) => (await new AxeBuilder({ page: p }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations;
+    const semViolacoes = (nome, v) => {
+      if (v.length) console.log(`  axe em ${nome}: ${v.map((x) => `${x.id} (${x.nodes.length})`).join(", ")}`);
+      return v.length === 0;
+    };
+    const ax = await a11y.newPage();
+    await ax.goto(`${BASE}/index.html`);
+    await ax.waitForSelector(".sapFCard", { timeout: 60000 });
+    await ax.waitForTimeout(500);
+    checks.push(["axe sem violações na lista (11 trilhas, 1280 px)", (await ax.locator(".sapFCard").count()) === 11 && semViolacoes("lista", await axe(ax))]);
+    await ax.goto(`${BASE}/index.html#/trilha/4`);
+    await ax.locator("button", { hasText: "Concluir módulo" }).waitFor({ timeout: 60000 });
+    await ax.waitForTimeout(500);
+    checks.push(["axe sem violações no detalhe", semViolacoes("detalhe", await axe(ax))]);
+    await ax.goto(`${BASE}/index.html#/trilha/999`);
+    await ax.getByText("Trilha não encontrada.").waitFor({ timeout: 60000 });
+    await ax.waitForTimeout(500);
+    checks.push(["axe sem violações na trilha inexistente", semViolacoes("trilha inexistente", await axe(ax))]);
+    /* Foco visível: no tema Horizon, o UI5 desenha o foco no ::before do .sapMFocusable (borda de 2 px).
+       Confere esse desenho com foco e sem foco, e que os pixels do botão mudam */
+    const fo = await a11y.newPage();
+    await fo.goto(`${BASE}/index.html`);
+    await fo.waitForSelector(".sapFCard", { timeout: 60000 });
+    let focado = false;
+    for (let i = 0; i < 25 && !focado; i += 1) {
+      await fo.keyboard.press("Tab");
+      focado = await fo.evaluate(() => document.activeElement?.closest(".sapFCard") !== null && document.activeElement?.tagName === "BUTTON");
+    }
+    let focoVisivel = false;
+    if (focado) {
+      const anel = () => fo.evaluate(() => {
+        const s = getComputedStyle(window.__botao.querySelector(".sapMFocusable"), "::before");
+        return { desenhado: s.content !== "none" && parseFloat(s.borderTopWidth) >= 1 && s.borderTopStyle !== "none" };
+      });
+      const caixa = await fo.evaluate(() => { window.__botao = document.activeElement; const r = window.__botao.getBoundingClientRect(); return { x: r.x - 4, y: r.y - 4, width: r.width + 8, height: r.height + 8 }; });
+      await fo.waitForTimeout(300);
+      const comFoco = await fo.screenshot({ clip: caixa });
+      const anelComFoco = await anel();
+      await fo.evaluate(() => document.activeElement.blur());
+      await fo.waitForTimeout(300);
+      const semFoco = await fo.screenshot({ clip: caixa });
+      const anelSemFoco = await anel();
+      focoVisivel = anelComFoco.desenhado && !anelSemFoco.desenhado && !comFoco.equals(semFoco);
+    }
+    checks.push(["foco visível no botão do card (Tab)", focoVisivel]);
+    /* Esc: a lista de ordenação abre pelo teclado e fecha com Esc, com o foco de volta no Select.
+       Recarrega para o Tab partir do topo, já que o Select fica acima dos cards */
+    await fo.goto(`${BASE}/index.html`);
+    await fo.waitForSelector(".sapFCard", { timeout: 60000 });
+    let noSelect = false;
+    for (let i = 0; i < 25 && !noSelect; i += 1) {
+      await fo.keyboard.press("Tab");
+      noSelect = await fo.evaluate(() => !!document.activeElement?.closest('[id$="--sortSelect"]'));
+    }
+    let escOk = false;
+    if (noSelect) {
+      await fo.keyboard.press("Alt+ArrowDown");
+      const lista = fo.locator(".sapMSelectList:visible");
+      const abriu = await lista.first().waitFor({ timeout: 5000 }).then(() => true, () => false);
+      await fo.keyboard.press("Escape");
+      await fo.waitForTimeout(500);
+      escOk = abriu && (await lista.count()) === 0 && await fo.evaluate(() => !!document.activeElement?.closest('[id$="--sortSelect"]'));
+    }
+    checks.push(["ordenação abre pelo teclado e fecha com Esc", escOk]);
+    await a11y.close();
     /* Medição (D5): nada do GoatCounter em localhost; no "site publicado", o script carrega e o detalhe conta o evento */
     const pedidosGc = [];
     context.on("request", (r) => { if (r.url().startsWith("https://gc.zgo.at/")) pedidosGc.push(r.url()); });
@@ -116,12 +217,12 @@ async function main() {
     checks.push(["medição não carrega em localhost", (await local.locator("script[data-goatcounter]").count()) === 0 && pedidosGc.length === 0]);
     const pub = await context.newPage();
     await pub.route("https://gc.zgo.at/count.js", (r) => r.fulfill({ contentType: "text/javascript", body: "window.goatcounter = { count: function (o) { (window.__eventos = window.__eventos || []).push(o); } };" }));
-    await pub.goto(`http://portal.test:${PORT}/index.html`);
+    await pub.goto(`http://portal.test:${PORT}/index.html`, { waitUntil: "domcontentloaded", timeout: 60000 }); /* a carga completa pode passar de 30 s com a máquina ocupada */
     await pub.waitForSelector(".sapFCard", { timeout: 60000 });
     const endereco = await pub.locator("script[data-goatcounter]").getAttribute("data-goatcounter");
     checks.push(["medição carrega no site com o código do portfólio", endereco === "https://douglasabnovato.goatcounter.com/count"]);
     await pub.waitForFunction(() => window.goatcounter && window.goatcounter.count, null, { timeout: 10000 }).catch(() => {});
-    await pub.goto(`http://portal.test:${PORT}/index.html#/trilha/4`);
+    await pub.goto(`http://portal.test:${PORT}/index.html#/trilha/4`, { waitUntil: "domcontentloaded", timeout: 60000 });
     await pub.waitForFunction(() => (window.__eventos || []).some((e) => e.path === "abrir-trilha" && e.event === true), null, { timeout: 10000 }).catch(() => {});
     checks.push(["abrir a trilha conta o evento abrir-trilha", await pub.evaluate(() => (window.__eventos || []).some((e) => e.path === "abrir-trilha" && e.event === true))]);
     for (const [name, ok] of checks) { console.log(`${ok ? "ok  " : "FALHA"} ${name}`); if (!ok) failures += 1; }

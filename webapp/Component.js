@@ -1,8 +1,9 @@
 /* Componente da aplicação: carrega o manifesto e inicia o roteador (lista e detalhe) */
 sap.ui.define([
     "sap/ui/core/UIComponent",
-    "./model/progress"
-], function (UIComponent, progress) {
+    "./model/progress",
+    "./model/favoritos"
+], function (UIComponent, progress, favoritos) {
     "use strict";
 
     return UIComponent.extend("com.douglas.learningportal.Component", {
@@ -23,7 +24,7 @@ sap.ui.define([
                     oModel.setProperty("/LoadError", true);
                     return;
                 }
-                oModel.setProperty("/Trilhas", progress.restore(aTrilhas, progress.load()));
+                oModel.setProperty("/Trilhas", favoritos.apply(progress.restore(aTrilhas, progress.load()), favoritos.load()));
             };
             oModel.dataLoaded().then(fnLoaded, fnLoaded);
             this.getRouter().initialize();
