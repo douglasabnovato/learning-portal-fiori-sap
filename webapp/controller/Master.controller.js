@@ -6,9 +6,11 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
+    "sap/m/MessageToast",
     "../model/formatter",
-    "../model/resumo"
-], function (Controller, UIComponent, JSONModel, Filter, FilterOperator, Sorter, formatter, resumo) {
+    "../model/resumo",
+    "../model/favoritos"
+], function (Controller, UIComponent, JSONModel, Filter, FilterOperator, Sorter, MessageToast, formatter, resumo, favoritos) {
     "use strict";
 
     return Controller.extend("com.douglas.learningportal.controller.Master", {
@@ -17,8 +19,7 @@ sap.ui.define([
 
         /* Modelo da visão com a contagem e o resumo; o resumo é refeito ao voltar do detalhe */
         onInit: function () {
-            this.getView().setModel(new JSONModel({ count: "", resumo: resumo.resumo([]) }), "view");
-            this.byId("trilhasGrid").attachEvent("updateFinished", this._updateCount, this);
+            this.getView().setModel(new JSONModel({ count: "", total: -1, soFavoritas: false, resumo: resumo.resumo([]) }), "view");
             var oModel = this.getOwnerComponent().getModel();
             oModel.dataLoaded().then(this._refresh.bind(this), this._refresh.bind(this));
             UIComponent.getRouterFor(this).getRoute("master").attachPatternMatched(this._refresh, this);
@@ -28,6 +29,12 @@ sap.ui.define([
         _refresh: function () {
             var aTrilhas = this.getOwnerComponent().getModel().getProperty("/Trilhas") || [];
             this.getView().getModel("view").setProperty("/resumo", resumo.resumo(aTrilhas));
+            /* A contagem segue a lista: a binding avisa a cada filtro e a cada troca no modelo, como ao tirar um favorito */
+            var oBinding = this.byId("trilhasGrid").getBinding("items");
+            if (oBinding && !this._bContando) {
+                oBinding.attachChange(this._updateCount, this);
+                this._bContando = true;
+            }
             this._updateCount();
         },
 
@@ -68,16 +75,32 @@ sap.ui.define([
                     }
                 }));
             }
+            var bSoFavoritas = this.byId("favoriteOnly").getSelected();
+            if (bSoFavoritas) {
+                aFilters.push(new Filter("Favorita", FilterOperator.EQ, true));
+            }
+            this.getView().getModel("view").setProperty("/soFavoritas", bSoFavoritas);
             this.byId("trilhasGrid").getBinding("items").filter(aFilters.length ? new Filter({ filters: aFilters, and: true }) : []);
             this._updateCount();
         },
 
-        /* Atualiza o texto "N trilhas" */
+        /* Favorito (#18): o binding já trocou o campo Favorita; aqui grava os Ids e avisa a mudança */
+        onFavoritePress: function (oEvent) {
+            var aTrilhas = this.getOwnerComponent().getModel().getProperty("/Trilhas") || [];
+            favoritos.save(favoritos.ids(aTrilhas));
+            var oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+            MessageToast.show(oBundle.getText(oEvent.getParameter("pressed") ? "favoriteAdded" : "favoriteRemoved"));
+        },
+
+        /* Atualiza o texto "N trilhas" e o número que liga o estado vazio
+           (antes o estado vazio comparava o texto "0 trilhas" com 0 e nunca aparecia) */
         _updateCount: function () {
             var oBinding = this.byId("trilhasGrid").getBinding("items");
             var iCount = oBinding ? oBinding.getLength() : 0;
             var oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            this.getView().getModel("view").setProperty("/count", oBundle.getText(iCount === 1 ? "trackCountOne" : "trackCount", [iCount]));
+            var oViewModel = this.getView().getModel("view");
+            oViewModel.setProperty("/total", iCount);
+            oViewModel.setProperty("/count", oBundle.getText(iCount === 1 ? "trackCountOne" : "trackCount", [iCount]));
         },
 
         /* Abre a página de detalhe da trilha escolhida (antes abria um diálogo e a rota de detalhe nunca era usada) */

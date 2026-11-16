@@ -65,6 +65,10 @@ async function main() {
     checks.push([`ordenar por título começa em "${PRIMEIRA_AZ}"`, (await primeiroCard()) === PRIMEIRA_AZ]);
     await ordenar("Ordem do catálogo");
     checks.push(["ordem do catálogo restaurada", (await primeiroCard()) === TRILHAS[0].Titulo]);
+    /* Busca sem resultado mostra o estado vazio (antes ele nunca aparecia) */
+    await app.locator("input[type=search]").fill("trilha-que-nao-existe");
+    await app.waitForTimeout(500);
+    checks.push(["busca vazia mostra o estado vazio", (await app.locator(".sapFCard").count()) === 0 && await app.getByText("Nenhuma trilha encontrada.").first().isVisible()]);
     await app.locator("input[type=search]").fill("Joule");
     await app.waitForTimeout(500);
     checks.push(["busca filtra", (await app.locator(".sapFCard").count()) === 1]);
@@ -107,6 +111,23 @@ async function main() {
     await off.goto(`${BASE}/index.html`);
     await off.getByText("Não foi possível carregar as trilhas").waitFor({ timeout: 60000 }).catch(() => {});
     checks.push(["falha ao carregar mostra aviso", await off.getByText("Não foi possível carregar as trilhas").isVisible()]);
+    /* Favoritos (#18): marcar, recarregar, filtrar e o estado vazio */
+    const fav = await context.newPage();
+    await fav.goto(`${BASE}/index.html`);
+    await fav.waitForSelector(".sapFCard", { timeout: 60000 });
+    const estrela = (p) => p.locator(".sapFCard").first().locator("button[aria-pressed]");
+    checks.push([`favorito com nome acessível "Favoritar: ${TRILHAS[0].Titulo}"`, (await estrela(fav).getAttribute("title")) === `Favoritar: ${TRILHAS[0].Titulo}` && (await estrela(fav).getAttribute("aria-pressed")) === "false"]);
+    await estrela(fav).click();
+    await fav.reload();
+    await fav.waitForSelector(".sapFCard", { timeout: 60000 });
+    await fav.waitForTimeout(500);
+    checks.push(["favorito restaurado ao recarregar", (await estrela(fav).getAttribute("aria-pressed")) === "true"]);
+    await fav.locator('[id$="--favoriteOnly"]').click();
+    await fav.waitForTimeout(500);
+    checks.push(["só favoritas mostra 1 card", (await fav.locator(".sapFCard").count()) === 1 && (await fav.locator(".sapFCard button").first().getAttribute("title")) === TRILHAS[0].Titulo]);
+    await estrela(fav).click();
+    await fav.waitForTimeout(500);
+    checks.push(["sem favoritas mostra o estado vazio", (await fav.locator(".sapFCard").count()) === 0 && await fav.getByText("Nenhuma trilha favorita.").first().isVisible()]);
     /* Medição (D5): nada do GoatCounter em localhost; no "site publicado", o script carrega e o detalhe conta o evento */
     const pedidosGc = [];
     context.on("request", (r) => { if (r.url().startsWith("https://gc.zgo.at/")) pedidosGc.push(r.url()); });
