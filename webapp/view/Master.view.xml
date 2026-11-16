@@ -49,7 +49,7 @@
                 <Title id="trilhasTitle" text="{i18n>trilhasHeader}" level="H2" titleStyle="H4" class="sapUiSmallMarginBottom" />
 
                 <OverflowToolbar class="sapUiSmallMarginBottom" style="Clear">
-                    <SearchField id="searchField" width="20rem" placeholder="{i18n>searchPlaceholder}" ariaLabelledBy="trilhasTitle" liveChange=".onFilter" search=".onFilter" />
+                    <SearchField id="searchField" width="14rem" placeholder="{i18n>searchPlaceholder}" ariaLabelledBy="trilhasTitle" liveChange=".onFilter" search=".onFilter" />
                     <Label id="statusLabel" text="{i18n>statusFilterLabel}" labelFor="statusFilter" />
                     <SegmentedButton id="statusFilter" ariaLabelledBy="statusLabel" selectionChange=".onFilter" selectedKey="all">
                         <items>
@@ -68,13 +68,14 @@
                             <core:Item key="horas" text="{i18n>sortHours}" />
                         </items>
                     </Select>
+                    <CheckBox id="favoriteOnly" text="{i18n>favoriteOnlyLabel}" select=".onFilter" />
                     <ToolbarSpacer />
                     <Text id="countText" text="{view>/count}" />
                 </OverflowToolbar>
 
                 <MessageStrip id="loadError" text="{i18n>loadError}" type="Error" showIcon="true" visible="{= ${/LoadError} === true }" class="sapUiSmallMarginBottom" />
 
-                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{i18n>noTracksFound}" visible="{= ${view>/count} === 0 &amp;&amp; ${/LoadError} !== true }" />
+                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{= ${view>/soFavoritas} &amp;&amp; !${view>/temFavoritas} ? ${i18n>noFavoritesFound} : ${i18n>noTracksFound} }" visible="{= ${view>/total} === 0 &amp;&amp; ${/LoadError} !== true }" />
 
                 <f:GridContainer id="trilhasGrid" items="{/Trilhas}" snapToRow="false" ariaLabelledBy="trilhasTitle">
                     <f:layout>
@@ -101,8 +102,13 @@
                                         <ObjectStatus icon="sap-icon://course-book" text="{Concluidos} / {ModulosCount} {i18n>modulesShort}" />
                                         <ObjectStatus icon="sap-icon://history" text="{Horas} h" />
                                     </HBox>
-                                    <Button text="{i18n>viewDetailsButton}" type="Emphasized" icon="sap-icon://navigation-right-arrow" iconFirst="false"
-                                        tooltip="{Titulo}" press=".onTrilhaPress" class="sapUiSmallMarginTop" />
+                                    <HBox alignItems="Center" justifyContent="SpaceBetween" class="sapUiSmallMarginTop">
+                                        <Button text="{i18n>viewDetailsButton}" type="Emphasized" icon="sap-icon://navigation-right-arrow" iconFirst="false"
+                                            tooltip="{Titulo}" press=".onTrilhaPress" />
+                                        <!-- Favorito (#18): botão de alternância, como no padrão Flag and Favorite do Fiori -->
+                                        <ToggleButton icon="{= ${Favorita} ? 'sap-icon://favorite' : 'sap-icon://unfavorite' }" pressed="{Favorita}"
+                                            tooltip="{= (${Favorita} ? ${i18n>unfavoriteTooltip} : ${i18n>favoriteTooltip}) + ': ' + ${Titulo} }" press=".onFavoritePress" />
+                                    </HBox>
                                 </VBox>
                             </f:content>
                         </f:Card>

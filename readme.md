@@ -6,30 +6,34 @@ O projeto simula um **portal de aprendizagem tecnológica**, permitindo visualiz
 
 ---
 
-## Estado e próximos passos (ciclo de 10/11/2026)
+## Estado e próximos passos (ciclo de 16/11/2026)
 
-Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 10/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
+Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 16/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
 
-Critérios do MVP (N2): 8 de 12 atendidos em 10/11/2026 ([docs/MVP.md](docs/MVP.md)). A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
+Critérios do MVP (N2): 8 de 12 atendidos em 16/11/2026 ([docs/MVP.md](docs/MVP.md)). Os 4 que faltam (3, 5, 7 e 9) dependem do responsável. A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
 
 **O que foi feito**
-- Medição de uso sem cookie (GoatCounter, código `douglasabnovato`): só no site publicado, com o evento `abrir-trilha` e teste no navegador. Falta a conta ([#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16)).
-- O `deploy.yml` passa a publicar a cada push na `main` quando a variável `PAGES_VIA_ACTIONS` for `true`; continua testando antes de publicar.
-- Meta da hipótese decidida no ciclo de 10/11/2026 (revisável).
-- Antes: `main` protegida (10/11), resumo da jornada, ordenação e CI nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)), aviso de falha e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)), progresso salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
+- Ciclo de 16/11/2026 (PR feature → sprint [#32](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/32)): favoritos nas trilhas ([#18](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/18)); estado vazio da busca, que nunca aparecia, corrigido; axe na lista, no detalhe e na trilha inexistente, foco visível e Esc no teste do navegador; dependências de desenvolvimento atualizadas; [docs/DEPLOY.md](docs/DEPLOY.md) refeito.
+- Ciclo de 10/11/2026 ([#28](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/28)): medição de uso sem cookie (GoatCounter), publicação no Pages travada pela variável `PAGES_VIA_ACTIONS`, meta da hipótese.
+- Antes: `main` protegida, resumo da jornada, ordenação e CI nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)), aviso de falha e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)), progresso salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
 
 **O que queremos fazer**
-- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Ligar o Pages e publicar (responsável).
+- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Ligar o Pages e criar a variável `PAGES_VIA_ACTIONS` (responsável).
 - [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Criar a conta do GoatCounter (responsável).
+- [#29](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/29) Ligar os alertas do Dependabot (responsável).
+- [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta (responsável).
 - [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado, depois da #3.
 - [#27](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/27) Validar com uma pessoa de fora.
-- [#18](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/18) Favoritos nas trilhas.
-- [#19](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/19) ESLint e teste OPA5 no CI.
+- [#31](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/31) Testar no celular (375 px).
+- [#30](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/30) Publicar só o que o app usa no `dist/`.
 - [#20](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/20) Lista de módulos no detalhe da trilha.
+- [#19](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/19) ESLint e teste OPA5 no CI.
 
 **Onde está a documentação**
 - Estado e critérios: [docs/MVP.md](docs/MVP.md).
-- Plano do ciclo: [docs/PLANO-DE-ACAO.md](docs/PLANO-DE-ACAO.md), seção "Ciclo de 03/11/2026".
+- Plano do ciclo: [docs/PLANO-DE-ACAO.md](docs/PLANO-DE-ACAO.md), seção "Ciclo de 16/11/2026".
+- Publicação: [docs/DEPLOY.md](docs/DEPLOY.md).
+- Arquitetura e análises antigas: [docs/ARQUITETURA.md](docs/ARQUITETURA.md), [docs/ANALISE.md](docs/ANALISE.md), [docs/AVALIACAO.md](docs/AVALIACAO.md).
 
 ## 🎯 Objetivo do Projeto
 
@@ -80,6 +84,12 @@ webapp/model/trilhas.json
 ```
 
 O modelo é disponibilizado pela configuração da aplicação e utilizado através de **Data Binding**.
+
+---
+
+### ⭐ Favoritos
+
+Cada card tem uma estrela (botão de alternância, como no padrão "Flag and Favorite" do Fiori). As favoritas ficam salvas no navegador e voltam ao recarregar. A caixa **Só favoritas** filtra o catálogo; sem nenhuma marcada, aparece um aviso. O código fica em `webapp/model/favoritos.js`, com testes em `webapp/test/unit/favoritos.qunit.js`.
 
 ---
 
@@ -271,12 +281,15 @@ webapp/manifest.json
 ```text
 learning-portal-fiori-sap/
 │
-├── .vscode/
+├── .github/workflows/    (ci.yml e deploy.yml)
+├── docs/                 (MVP, plano, deploy)
+├── test/run-qunit.cjs    (executor dos testes)
 │
 ├── webapp/
 │   │
 │   ├── controller/
 │   │   ├── App.controller.js
+│   │   ├── Master.controller.js
 │   │   └── Detail.controller.js
 │   │
 │   ├── i18n/
@@ -284,10 +297,17 @@ learning-portal-fiori-sap/
 │   │   └── i18n_en.properties
 │   │
 │   ├── model/
+│   │   ├── favoritos.js
+│   │   ├── formatter.js
+│   │   ├── progress.js
+│   │   ├── resumo.js
 │   │   └── trilhas.json
+│   │
+│   ├── test/unit/          (QUnit)
 │   │
 │   ├── view/
 │   │   ├── App.view.xml
+│   │   ├── Master.view.xml
 │   │   └── Detail.view.xml
 │   │
 │   ├── Component.js
@@ -370,7 +390,7 @@ npx playwright install chromium   # só na primeira vez
 npm test
 ```
 
-Roda os testes QUnit de `model/formatter.js`, `model/progress.js` e `model/resumo.js` (37 asserções) e 15 checagens no navegador: lista, resumo, ordenação, busca, detalhe, progresso salvo, teclado, falha ao carregar e rota inexistente. O CI roda o mesmo comando nos PRs para a `main` e para `developer/**`. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
+Roda os testes QUnit de `model/formatter.js`, `model/progress.js`, `model/resumo.js` e `model/favoritos.js` (49 asserções) e 29 checagens no Chromium: lista, resumo, ordenação, busca e busca vazia, detalhe, progresso salvo, favoritos, teclado, foco visível, Esc, falha ao carregar, rota inexistente, medição e axe (WCAG 2.1 A e AA) na lista, no detalhe e na trilha inexistente. O CI roda o mesmo comando nos PRs para a `main` e para `developer/**`. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
 
 ### Publicar (gratuito)
 
@@ -378,7 +398,7 @@ Roda os testes QUnit de `model/formatter.js`, `model/progress.js` e `model/resum
 npm run build        # gera dist/ autocontido
 ```
 
-O CI (`.github/workflows/ci.yml`) testa e gera o `dist/`. A publicação no GitHub Pages é manual: o workflow `deploy.yml` roda os testes antes de publicar. O Pages ainda não está ligado (#3).
+O CI (`.github/workflows/ci.yml`) testa e gera o `dist/`. O workflow `deploy.yml` (**Publicar**) roda os testes e publica no GitHub Pages a cada push na `main`, mas só quando a variável `PAGES_VIA_ACTIONS` for `true`; também roda à mão. O Pages ainda não está ligado (#3).
 
 ### Em produção
 
@@ -510,7 +530,7 @@ O projeto continuará evoluindo em etapas.
 
 - [x] Criar filtro por status
 - [ ] Exibir quantidade de trilhas por status
-- [ ] Adicionar filtro de favoritos
+- [x] Adicionar filtro de favoritos
 
 ### Ordenação
 
@@ -520,9 +540,9 @@ O projeto continuará evoluindo em etapas.
 
 ### Favoritos
 
-- [ ] Adicionar ação de favorito
-- [ ] Persistir favoritos em `localStorage`
-- [ ] Criar visualização de favoritos
+- [x] Adicionar ação de favorito
+- [x] Persistir favoritos em `localStorage`
+- [x] Criar visualização de favoritos
 
 ---
 
@@ -626,7 +646,7 @@ Adicionar práticas de qualidade e engenharia de software.
 - [x] QUnit
 - [ ] Testes de Controller
 - [ ] Testes de Data Binding
-- [ ] Testes de filtros
+- [x] Testes de filtros
 - [ ] OPA5
 - [x] Testes de navegação
 
@@ -639,7 +659,7 @@ Adicionar práticas de qualidade e engenharia de software.
 
 ### Acessibilidade
 
-- [ ] Revisar navegação por teclado
+- [x] Revisar navegação por teclado (Tab, Enter, Esc e foco visível no teste do navegador)
 - [x] Revisar labels
 - [ ] Revisar estados semânticos
 - [x] Validar acessibilidade dos componentes
@@ -765,20 +785,3 @@ Projeto desenvolvido para estudo, portfólio e aprofundamento prático no desenv
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença ISC para fins educacionais e de portfólio profissional.
-
-## Próximos passos
-
-Estado do MVP em [`docs/MVP.md`](docs/MVP.md); plano em [`docs/PLANO-DE-ACAO.md`](docs/PLANO-DE-ACAO.md).
-
-**Do responsável**
-
-- #3: em Settings > Pages, escolher GitHub Actions como origem e rodar o workflow **Publicar**.
-- #16: escolher a ferramenta de medição de uso, sem dados pessoais.
-- #17: confirmar ou trocar a hipótese e a meta.
-
-**Do agente**
-
-- #15: medir LCP e acessibilidade no site publicado (depois da #3).
-- #20: lista de módulos no detalhe da trilha.
-- #18: favoritos.
-- #19: ESLint e teste OPA5 no CI.
