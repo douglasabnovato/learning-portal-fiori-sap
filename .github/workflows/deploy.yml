@@ -1,7 +1,11 @@
-# Publicação manual no GitHub Pages: rode em Actions depois de ligar o Pages com fonte em GitHub Actions
+# Publicação no GitHub Pages. Roda a cada push na main só quando a variável PAGES_VIA_ACTIONS for "true"
+# (depois de ligar o Pages com fonte em GitHub Actions); o disparo manual continua disponível.
+# Testa e gera o build antes de publicar: nada sobe sem os mesmos passos do CI.
 name: Publicar
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -15,6 +19,7 @@ concurrency:
 
 jobs:
   publicar:
+    if: github.event_name == 'workflow_dispatch' || vars.PAGES_VIA_ACTIONS == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -29,6 +34,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm test
       - run: npm run build
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
