@@ -10,9 +10,10 @@ O projeto simula um **portal de aprendizagem tecnológica**, permitindo visualiz
 
 Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 16/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
 
-Critérios do MVP (N2): 8 de 12 atendidos em 16/11/2026 ([docs/MVP.md](docs/MVP.md)). Os 4 que faltam (3, 5, 7 e 9) dependem do responsável. A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
+Critérios do MVP (N2): 9 de 12 atendidos em 16/11/2026 ([docs/MVP.md](docs/MVP.md)). Finalizado: sim. Os critérios 3, 5 e 7 dependem do responsável. Os 3 alertas do Dependabot abertos (`sigstore`, `@sigstore/core` e `minimatch`, só nas ferramentas do UI5, fora do `dist/`) estão aceitos na [ADR-06](docs/adr/0006-aceitar-alertas-de-desenvolvimento.md), por ordem do responsável ([#35](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/35)). A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
 
 **O que foi feito**
+- 16/11/2026: alertas de desenvolvimento do Dependabot aceitos na [ADR-06](docs/adr/0006-aceitar-alertas-de-desenvolvimento.md) ([#35](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/35)).
 - Ciclo de 16/11/2026 (PR feature → sprint [#32](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/32)): favoritos nas trilhas ([#18](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/18)); estado vazio da busca, que nunca aparecia, corrigido; axe na lista, no detalhe e na trilha inexistente, foco visível e Esc no teste do navegador; dependências de desenvolvimento atualizadas; [docs/DEPLOY.md](docs/DEPLOY.md) refeito.
 - Ciclo de 10/11/2026 ([#28](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/28)): medição de uso sem cookie (GoatCounter), publicação no Pages travada pela variável `PAGES_VIA_ACTIONS`, meta da hipótese.
 - Antes: `main` protegida, resumo da jornada, ordenação e CI nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)), aviso de falha e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)), progresso salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
@@ -20,7 +21,7 @@ Critérios do MVP (N2): 8 de 12 atendidos em 16/11/2026 ([docs/MVP.md](docs/MVP.
 **O que queremos fazer**
 - [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Ligar o Pages e criar a variável `PAGES_VIA_ACTIONS` (responsável).
 - [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Criar a conta do GoatCounter (responsável).
-- [#29](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/29) Ligar os alertas do Dependabot (responsável).
+- [#29](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/29) Ligar os alertas do Dependabot (ligados pelo responsável em 16/11/2026; falta fechar a issue).
 - [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta (responsável).
 - [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado, depois da #3.
 - [#27](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/27) Validar com uma pessoa de fora.
