@@ -390,7 +390,7 @@ npx playwright install chromium   # só na primeira vez
 npm test
 ```
 
-Roda os testes QUnit de `model/formatter.js`, `model/progress.js`, `model/resumo.js` e `model/favoritos.js` (49 asserções) e 28 checagens no Chromium: lista, resumo, ordenação, busca e busca vazia, detalhe, progresso salvo, favoritos, teclado, foco visível, Esc, falha ao carregar, rota inexistente, medição e axe (WCAG 2.1 A e AA) na lista, no detalhe e na trilha inexistente. O CI roda o mesmo comando nos PRs para a `main` e para `developer/**`. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
+Roda os testes QUnit de `model/formatter.js`, `model/progress.js`, `model/resumo.js` e `model/favoritos.js` (49 asserções) e 29 checagens no Chromium: lista, resumo, ordenação, busca e busca vazia, detalhe, progresso salvo, favoritos, teclado, foco visível, Esc, falha ao carregar, rota inexistente, medição e axe (WCAG 2.1 A e AA) na lista, no detalhe e na trilha inexistente. O CI roda o mesmo comando nos PRs para a `main` e para `developer/**`. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
 
 ### Publicar (gratuito)
 

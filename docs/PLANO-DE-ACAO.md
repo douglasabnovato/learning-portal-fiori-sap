@@ -70,7 +70,7 @@ Timebox: 30 min.
 
 **Este ciclo executa:** itens 1 a 5 do backlog, o `docs/MVP.md` e o README atualizados.
 
-**Vira issue ou segue em issue:** Pages (#3), GoatCounter (#16), LCP no ar (#15), validação com pessoa de fora (#27), ligar os alertas do Dependabot (issue nova), lista de módulos (#20), ESLint e OPA5 (#19), reduzir o `dist/` (issue nova).
+**Vira issue ou segue em issue:** Pages (#3), GoatCounter (#16), LCP no ar (#15), validação com pessoa de fora (#27), ligar os alertas do Dependabot (#29), lista de módulos (#20), ESLint e OPA5 (#19), reduzir o `dist/` (#30), testar no celular (#31).
 
 ## Ciclo de 03/11/2026
 

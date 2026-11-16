@@ -33,7 +33,7 @@ Medição: o `index.html` carrega o GoatCounter (`douglasabnovato.goatcounter.co
 5. Abrir **Actions → Publicar → Run workflow**, branch `main`, e clicar em **Run workflow**. Esperar o job `publicar` ficar verde (cerca de 3 minutos).
 6. Daí em diante, cada merge na `main` publica sozinho.
 
-Alternativa por comando, no repositório `engenharia`: `DONO=douglasabnovato bash scripts/configurar-responsavel.sh pages learning-portal-fiori-sap`. A variável continua sendo criada à mão (passos 3 e 4).
+Alternativa por comando, no repositório `engenharia`: crie antes a variável (passos 3 e 4) e depois rode `DONO=douglasabnovato bash scripts/configurar-responsavel.sh pages learning-portal-fiori-sap`. O script liga o Pages e roda de novo o último workflow da `main`; sem a variável, esse run sai `skipped`.
 
 ## 4. Conferir no ar
 
