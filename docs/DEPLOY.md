@@ -1,94 +1,68 @@
 # Deploy · Learning Portal Fiori SAP
 
-Plano de ação para publicar o portal de trilhas em OpenUI5 em hospedagem gratuita.
+Como o portal vai ao ar no GitHub Pages, de graça. Revisto em 16/11/2026 para bater com os workflows atuais.
 
-## 1. Desafio
+## 1. Estado em 16/11/2026
 
-Publicar um app OpenUI5 (Fiori Horizon, roteamento por hash) cujo build `self-contained` gera uma pasta `dist/` com a biblioteca UI5 embutida, sem servidor próprio, com deploy automático e sem custo, funcionando dentro do subcaminho `/learning-portal-fiori-sap/` do GitHub Pages.
+- `curl -s -o /dev/null -w "%{http_code}" https://douglasabnovato.github.io/learning-portal-fiori-sap/`: **404**.
+- `gh api repos/douglasabnovato/learning-portal-fiori-sap/pages`: **404** (Pages desligado).
+- O último run do workflow **Publicar** na `main` (43799508961, 16/11/2026) ficou como `skipped`: a variável `PAGES_VIA_ACTIONS` não existe.
+- Ligar o Pages e criar a variável é do responsável (#3).
 
-## 2. Conteúdo
+## 2. Como funciona
 
-### Decisão de hospedagem
-
-| Opção | Resultado |
+| Peça | O que faz |
 |---|---|
-| **GitHub Pages publicado pelo GitHub Actions (escolhida)** | Gratuito, no mesmo lugar do código; o workflow que já testa e gera o `dist/` passa a publicar a `main` |
-| Netlify (arrastar `dist/`) | Funciona, mas é manual a cada versão e exige outra conta |
-| SAP BTP (trial) | Seria o ambiente "oficial" de Fiori, mas o trial expira e exige configuração de subconta; não compensa para um portfólio estático |
+| `.github/workflows/ci.yml` | Em cada PR para a `main` ou para `developer/**` e em cada push na `main`: `npm ci`, instala o Chromium, `npm test` e `npm run build`. Job `verificar`, exigido pelo ruleset `principal-protegida` |
+| `.github/workflows/deploy.yml` | Workflow **Publicar**. Roda em push na `main` só se `vars.PAGES_VIA_ACTIONS == 'true'`, ou à mão (`workflow_dispatch`). Repete os testes e o build e publica a pasta `dist/` com `actions/deploy-pages` |
+| `npm run build` | `ui5 build self-contained --all --clean-dest`: gera o `dist/` com a biblioteca OpenUI5 embutida, sem CDN |
 
-URL esperada: **https://douglasabnovato.github.io/learning-portal-fiori-sap/**
+Por que o app funciona no subcaminho `/learning-portal-fiori-sap/` sem mudar código:
+- o `webapp/index.html` carrega `resources/sap-ui-core.js` por caminho relativo, e o build troca por `resources/sap-ui-custom.js` dentro do `dist/`;
+- o `manifest.json` carrega `model/trilhas.json` e `i18n/` por caminho relativo;
+- as rotas usam hash (`#/trilha/4`), então F5 e link direto funcionam sem `404.html`.
 
-### Por que o app já funciona no subcaminho (sem mudar código)
+Medição: o `index.html` carrega o GoatCounter (`douglasabnovato.goatcounter.com`) só fora de `localhost`. Sem a conta (#16), o script carrega e nada é contado.
 
-- **Bootstrap do UI5**: o `webapp/index.html` não usa mais o CDN (`ui5.sap.com`). Ele carrega `resources/sap-ui-core.js` com **caminho relativo**, e o build `self-contained` troca por `resources/sap-ui-custom.js` dentro do próprio `dist/`. No teste, nenhuma requisição saiu para fora do site.
-- **Caminhos relativos**: `data-sap-ui-resource-roots` aponta para `./` e o `manifest.json` carrega `model/trilhas.json` e `i18n/` de forma relativa, então tudo resolve dentro de `/learning-portal-fiori-sap/`.
-- **Rotas por hash** (`#/trilha/4`): o servidor só recebe `/learning-portal-fiori-sap/`, então deep link e F5 funcionam sem `404.html`.
+## 3. Passo a passo do responsável (#3)
 
-### O que foi ajustado
+1. Abrir https://github.com/douglasabnovato/learning-portal-fiori-sap/settings/pages.
+2. Em **Build and deployment → Source**, escolher **GitHub Actions**. Não salvar nenhuma branch.
+3. Abrir **Settings → Secrets and variables → Actions → aba Variables → New repository variable**.
+4. Name: `PAGES_VIA_ACTIONS`. Value: `true`. Clicar em **Add variable**. Não há segredo a criar.
+5. Abrir **Actions → Publicar → Run workflow**, branch `main`, e clicar em **Run workflow**. Esperar o job `publicar` ficar verde (cerca de 3 minutos).
+6. Daí em diante, cada merge na `main` publica sozinho.
 
-| Arquivo | Ajuste | Por quê |
-|---|---|---|
-| `ci/github-actions-ci.yml` | O job `test` (Node 22, já existente) agora também envia o `dist/` como artefato do Pages, e um novo job `deploy` publica (só em push na `main`) | Publicação automática a cada push |
-| `readme.md` | Seção "Publicar" atualizada e seção "Em produção" | Link do site e deste passo a passo (o texto antigo mandava arrastar o `dist/` no Netlify) |
+Alternativa por comando, no repositório `engenharia`: `DONO=douglasabnovato bash scripts/configurar-responsavel.sh pages learning-portal-fiori-sap`. A variável continua sendo criada à mão (passos 3 e 4).
 
-Validação feita antes da entrega (sandbox, Node 22):
+## 4. Conferir no ar
 
-- `npm ci` limpo; `npm test`: **QUnit 11 ok, 0 falhas** + smoke test com 4 checagens (11 cards, busca, detalhe pelo Id, id inexistente); `npm run build` gera o `dist/` (1,1 min).
-- `npm audit --omit=dev`: **0 vulnerabilidades**. `npm audit` completo: **7 alertas (3 moderados, 4 altos) só de desenvolvimento**, vindos do `@ui5/cli`; `npm audit fix` sem `--force` não resolve nenhum (antes 7 → depois 7), e o `--force` seria upgrade major, então não apliquei. Não vão para o site publicado.
-- `dist/` servido por um servidor que imita o Pages em `/learning-portal-fiori-sap/`, aberto no Chromium com Playwright: 11 cards, clique abre `#/trilha/1`, abrir `#/trilha/4` direto mostra "AI Assistant - Joule & GenAI", endereço sem barra final redireciona para `/learning-portal-fiori-sap/`, nenhuma requisição externa.
+1. `curl -s -o /dev/null -w "%{http_code}" https://douglasabnovato.github.io/learning-portal-fiori-sap/` responde 200.
+2. Abrir o link: tema Horizon e 11 cards de trilhas.
+3. Buscar "Joule": sobra 1 card. Abrir a trilha: a URL termina em `#/trilha/4`. Dar F5: o detalhe continua.
+4. Abrir `.../#/trilha/999`: aparece "Trilha não encontrada.".
+5. DevTools → Network: nada vem de `ui5.sap.com`; tudo vem de `/learning-portal-fiori-sap/resources/`.
+6. Em **About → Website** do repositório, colar o link (opcional, do responsável).
 
-### Limitações do plano gratuito
+Depois disso, o agente mede o LCP no site (#15) e o critério 7 pode sair de "Parcial".
 
-- GitHub Pages: site público, até 1 GB, cerca de 100 GB de banda por mês; o repositório precisa ser público no plano gratuito.
-- O `dist/` tem cerca de **149 MB e 9.400 arquivos**, porque `ui5 build self-contained --all` copia as bibliotecas inteiras (`resources/`). Cabe no limite do Pages, mas o upload do artefato leva alguns segundos a mais. O navegador só baixa o que usa (o `sap-ui-custom.js` já junta o necessário).
-- O único erro no console é o `favicon.ico` que o navegador procura na raiz do domínio (o `index.html` não declara ícone). É estético e já acontecia antes.
+## 5. Validar localmente
 
-### Segurança e LGPD
+```bash
+npm ci
+npx playwright install chromium   # só na primeira vez
+npm test                          # QUnit e checagens no navegador, com axe
+npm run build                     # gera dist/
+```
 
-- Não há segredo nem dado pessoal: as trilhas ficam em `webapp/model/trilhas.json`, público.
+Para simular o subcaminho: copiar `dist/` para uma pasta `lp/learning-portal-fiori-sap/` e servir `lp/` com um servidor que comprime, como o Pages (`npx serve lp`).
 
-### Decisões pendentes (para você validar)
+## 6. Limites do plano gratuito
 
-1. **Tamanho do `dist/`**: dá para reduzir bastante publicando só o que o app usa (tirando `--all` ou filtrando `resources/`), mas isso muda o build e pede novo teste dos temas. Não mexi. Diga se quer que eu teste essa otimização.
-2. **Favicon**: opcional, adicionar um ícone em `webapp/` e um `<link rel="icon">` no `index.html` para acabar com o 404 do console.
+- GitHub Pages: site público, até 1 GB, cerca de 100 GB de banda por mês.
+- O `dist/` tem cerca de 149 MB e 9.400 arquivos, porque `--all` copia as bibliotecas inteiras. Cabe no limite, mas atrasa o upload. Reduzir o build está numa issue própria.
 
-## 3. Solução (passo a passo)
+## 7. Segurança e LGPD
 
-### Etapa 1 · Validar localmente (Git Bash)
-
-1. `cd /c/ambiente-projeto/ser-mvp/learning-portal-fiori-sap`
-2. `npm ci` (se reclamar do lockfile, `npm install` e depois `npm ci` de novo)
-3. `npx playwright install chromium` (só na primeira vez)
-4. `npm test` (QUnit + smoke)
-5. `npm run build` e conferir que `dist/index.html` e `dist/resources/sap-ui-custom.js` existem.
-6. Opcional, simular o subcaminho: `mkdir -p /tmp/lp && rm -rf /tmp/lp/learning-portal-fiori-sap && cp -r dist /tmp/lp/learning-portal-fiori-sap && npx http-server /tmp/lp -p 8081`, depois abrir `http://localhost:8081/learning-portal-fiori-sap/`.
-
-### Etapa 2 · Ligar o GitHub Pages (antes do push)
-
-1. No repositório `learning-portal-fiori-sap` no GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. Não é preciso criar variável nem segredo.
-
-### Etapa 3 · Subir para o GitHub
-
-1. Nada a remover com `git rm` (conforme PENDENCIAS).
-2. Mover o workflow:
-   ```bash
-   mkdir -p .github/workflows && mv ci/github-actions-ci.yml .github/workflows/ci.yml && rmdir ci
-   ```
-3. `git status` (nenhum `dist/`, `resources/` ou `node_modules/` pode aparecer; o `.gitignore` já cobre)
-4. `git add -A`
-5. `git commit -m "chore: deploy do dist/ no GitHub Pages pelo workflow"`
-6. `git push origin main`
-7. Aba **Actions**: o workflow "ci" precisa ficar verde nos jobs `test` e `deploy`.
-
-### Etapa 4 · Conferir no ar
-
-1. Abrir https://douglasabnovato.github.io/learning-portal-fiori-sap/: tema Horizon e 11 cards de trilhas.
-2. Buscar "Joule": sobra 1 card.
-3. Abrir uma trilha: a URL termina em `#/trilha/<id>`. Dar F5: o detalhe continua.
-4. Abrir `https://douglasabnovato.github.io/learning-portal-fiori-sap/#/trilha/999`: aparece "Trilha não encontrada.".
-5. DevTools (F12) → Network: nenhuma requisição para `ui5.sap.com` (tudo vem de `/learning-portal-fiori-sap/resources/`).
-
-### Etapa 5 · Fechar
-
-1. No GitHub, **About → Website**: colar `https://douglasabnovato.github.io/learning-portal-fiori-sap/`.
+- Sem segredo e sem dado pessoal: as trilhas ficam em `webapp/model/trilhas.json`, público. Progresso e favoritos ficam só no `localStorage` do navegador de quem usa.
+- A medição não usa cookie nem guarda dado pessoal.
