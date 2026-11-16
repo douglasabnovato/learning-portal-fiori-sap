@@ -1,12 +1,12 @@
 # MVP — Learning Portal Fiori SAP
 
-> Criado em 31/10/2026. Revisto em 03/11, 10/11 e 16/11/2026 (ciclo de 16/11, plano em `docs/PLANO-DE-ACAO.md`). Este arquivo é a fonte única do estado.
+> Criado em 31/10/2026. Revisto em 03/11, 10/11 e 16/11/2026 (ciclo de 16/11, plano em `docs/PLANO-DE-ACAO.md`; critério 9 revisto às 12h33 de 16/11, com os alertas do Dependabot ligados). Este arquivo é a fonte única do estado.
 
 **Nível:** Vitrine (N2). Os 12 critérios se aplicam.
 
 **Resumo:** 8 de 12 aplicáveis atendidos
 
-**Finalizado:** sim — os 4 que faltam (3, 5, 7 e 9) dependem do responsável e têm issue com `depende-do-responsavel`: ligar o Pages (#3), criar a conta do GoatCounter (#16), medir no site depois da #3 (#15) e ligar os alertas do Dependabot (#29)
+**Finalizado:** não — 3 dos 4 que faltam (3, 5 e 7) dependem do responsável e têm issue com `depende-do-responsavel`: ligar o Pages (#3), criar a conta do GoatCounter (#16) e medir no site depois da #3 (#15). O 9 não: restam 3 alertas do Dependabot sem correção sem versão maior (#35)
 
 ## Problema e hipótese
 
@@ -28,14 +28,14 @@ Comandos rodados em 16/11/2026, na branch `feature/2026-11-16`, salvo indicaçã
 | 6 | Falhas tratadas | Atende | `npm test`: "busca vazia mostra o estado vazio", "sem favoritas mostra o estado vazio", "com favorita, busca vazia mostra o aviso comum", "id inexistente mostra aviso" e "falha ao carregar mostra aviso" (rota de `trilhas.json` abortada) passam; QUnit de armazenamento bloqueado em `progress.qunit.js` e `favoritos.qunit.js`. O estado vazio da busca nunca aparecia (comparava o texto "0 trilhas" com 0) e foi corrigido neste ciclo | — |
 | 7 | Desempenho aceitável | Parcial | Sem site no ar, não há Lighthouse no link publicado. Só medição local (ver "Medições") | #15 (espera a #3) |
 | 8 | Acessibilidade básica | Atende | `npm test`: axe (WCAG 2.1 A e AA) sem violações na lista com as 11 trilhas reais em 1280 px, no detalhe e na trilha inexistente; detalhe aberto só com Tab e Enter; foco visível conferido no anel que o UI5 desenha (`.sapMFocusable::before`), com teste de mutação que falha sem ele; lista de ordenação abre pelo teclado e fecha com Esc. O app não tem tema escuro próprio (só `sap_horizon` em `webapp/index.html`, sem `prefers-color-scheme`), então não há axe no escuro: a régua pede o escuro só quando ele existe. No CI: run 43818902088 (16/11/2026, verde) | #31 (celular) |
-| 9 | Segurança e conformidade | Parcial | `npm audit --omit=dev`: 0 vulnerabilidades. `npm audit`: 25 (21 moderadas, 4 altas), todas de desenvolvimento. `gh api "repos/douglasabnovato/learning-portal-fiori-sap/dependabot/alerts?state=open&per_page=100"`: 403, alertas desligados. Pela regra em decisão (engenharia#33), fica "Parcial" até os alertas existirem. Sem segredo no código; sem dado pessoal (progresso e favoritos só no navegador) | #29 (responsável) |
+| 9 | Segurança e conformidade | Parcial | `npm audit --omit=dev`: 0 vulnerabilidades (16/11/2026). Alertas do Dependabot ligados em 16/11/2026: `gh api "repos/douglasabnovato/learning-portal-fiori-sap/dependabot/alerts?state=open&per_page=100"` às 12h33 deu 3 abertos, todos de desenvolvimento, vindos do `@ui5/cli` 4.0.73: #2 `sigstore` 3.1.0 (alta), #1 `@sigstore/core` 2.0.0 (moderada) e #20 `minimatch` 9.0.9 (moderada). 0 corrigidos na sprint-19; 3 restam (#35): as correções só existem em versões maiores (`sigstore` 4, `@sigstore/core` 3, `minimatch` 11), e `@ui5/cli` e `@ui5/project` já estão na versão mais nova. `npm audit` completo: 25 (21 moderadas, 4 altas), `npm audit fix` sem `--force` não muda nada. Sem segredo no código; sem dado pessoal (progresso e favoritos só no navegador) | #35 |
 | 10 | Entrega confiável | Atende | `gh api repos/douglasabnovato/learning-portal-fiori-sap/rules/branches/main`: `deletion`, `non_fast_forward`, `pull_request` e `required_status_checks`; o ruleset `principal-protegida` (ativo) exige o check `verificar` | — |
 | 11 | Testes dos fluxos críticos | Atende | `npm test`: 49 asserções QUnit e 29 checagens no navegador, nenhuma pulada. No CI: run 43818902088 do PR #32 (16/11/2026, commit `fe35f82`, job `verificar` verde): `QUnit: 49 ok, 0 falhas`, 29 checagens `ok`, nenhuma `FALHA` nem `skip` | — |
 | 12 | Documentação honesta | Atende | README: `npm start`, `npm test` e `npm run build` conferidos contra o `package.json`; o link do site aparece como "ainda não publicado". `docs/DEPLOY.md` refeito com os workflows atuais | — |
 
 **Atendidos:** 1, 2, 4, 6, 8, 10, 11 e 12. **Parciais:** 3, 5, 7 e 9.
 
-**Por que "Finalizado: sim":** tudo o que o código resolve está feito. Os critérios 3, 5, 7 e 9 dependem do responsável (#3, #16, #15 e #29), todos com `depende-do-responsavel`.
+**Por que "Finalizado: não":** os critérios 3, 5 e 7 dependem do responsável (#3, #16 e #15), todos com `depende-do-responsavel`. O 9 tem 3 alertas do Dependabot sem correção sem versão maior (#35), que não dependem só do responsável: saem com uma linha nova do `@ui5/cli`, com `overrides` testados, ou com risco aceito em ADR pelo responsável.
 
 ## 2. Tarefas
 
@@ -61,6 +61,10 @@ OData real, SAP BTP, autenticação e gráficos.
 - 02/11/2026: Lighthouse 12.8.2 local, perfil móvel simulado, sem aparelho real.
 
 ## Histórico
+
+### Revisão de 16/11/2026, 12h33 (alertas do Dependabot)
+
+Antes: **Resumo** 8 de 12, **Finalizado:** sim, com o 9 em "Parcial" por alertas desligados (403, #29). Depois: alertas ligados, 3 abertos sem correção sem versão maior (#35). O 9 segue "Parcial" e o Finalizado cai para "não". Resumo segue 8 de 12.
 
 ### Estado de 10/11/2026, antes do ciclo de 16/11
 
