@@ -75,7 +75,7 @@
 
                 <MessageStrip id="loadError" text="{i18n>loadError}" type="Error" showIcon="true" visible="{= ${/LoadError} === true }" class="sapUiSmallMarginBottom" />
 
-                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{= ${view>/soFavoritas} ? ${i18n>noFavoritesFound} : ${i18n>noTracksFound} }" visible="{= ${view>/total} === 0 &amp;&amp; ${/LoadError} !== true }" />
+                <IllustratedMessage id="emptyState" illustrationType="sapIllus-NoSearchResults" title="{= ${view>/soFavoritas} &amp;&amp; !${view>/temFavoritas} ? ${i18n>noFavoritesFound} : ${i18n>noTracksFound} }" visible="{= ${view>/total} === 0 &amp;&amp; ${/LoadError} !== true }" />
 
                 <f:GridContainer id="trilhasGrid" items="{/Trilhas}" snapToRow="false" ariaLabelledBy="trilhasTitle">
                     <f:layout>
@@ -107,7 +107,7 @@
                                             tooltip="{Titulo}" press=".onTrilhaPress" />
                                         <!-- Favorito (#18): botão de alternância, como no padrão Flag and Favorite do Fiori -->
                                         <ToggleButton icon="{= ${Favorita} ? 'sap-icon://favorite' : 'sap-icon://unfavorite' }" pressed="{Favorita}"
-                                            tooltip="{i18n>favoriteTooltip}: {Titulo}" press=".onFavoritePress" />
+                                            tooltip="{= (${Favorita} ? ${i18n>unfavoriteTooltip} : ${i18n>favoriteTooltip}) + ': ' + ${Titulo} }" press=".onFavoritePress" />
                                     </HBox>
                                 </VBox>
                             </f:content>

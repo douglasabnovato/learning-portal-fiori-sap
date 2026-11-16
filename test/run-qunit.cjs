@@ -1,4 +1,4 @@
-/* Executor de testes: sobe o "ui5 serve", roda o QUnit e um teste de fumaça do app (lista, resumo, ordenação, busca, detalhe e 404) no Chromium headless */
+/* Executor de testes: sobe o "ui5 serve", roda o QUnit e as checagens do app no Chromium headless (lista, resumo, ordenação, busca, detalhe, 404, progresso, favoritos, teclado, foco, Esc, falhas, medição e axe) */
 const { spawn } = require("node:child_process");
 const { chromium } = require("playwright");
 const AxeBuilder = require("@axe-core/playwright").default;
@@ -130,6 +130,15 @@ async function main() {
     await estrela(fav).click();
     await fav.waitForTimeout(500);
     checks.push(["sem favoritas mostra o estado vazio", (await fav.locator(".sapFCard").count()) === 0 && await fav.getByText("Nenhuma trilha favorita.").first().isVisible()]);
+    /* Com uma favorita marcada, a busca sem resultado mostra o aviso comum, não o de "nenhuma favorita" */
+    await fav.locator('[id$="--favoriteOnly"]').click();
+    await fav.waitForTimeout(500);
+    await estrela(fav).click();
+    await fav.waitForTimeout(300);
+    await fav.locator('[id$="--favoriteOnly"]').click();
+    await fav.locator("input[type=search]").fill("trilha-que-nao-existe");
+    await fav.waitForTimeout(500);
+    checks.push(["com favorita, busca vazia mostra o aviso comum", (await fav.locator(".sapFCard").count()) === 0 && await fav.getByText("Nenhuma trilha encontrada.").first().isVisible() && (await fav.getByText("Nenhuma trilha favorita.").count()) === 0]);
     /* Acessibilidade: axe (WCAG 2.1 A e AA) em largura de desktop, com as 11 trilhas reais.
        O app só tem o tema sap_horizon (claro); não há tema escuro próprio para testar. */
     const a11y = await browser.newContext({ locale: "pt-BR", viewport: { width: 1280, height: 800 } });
@@ -179,7 +188,10 @@ async function main() {
       focoVisivel = anelComFoco.desenhado && !anelSemFoco.desenhado && !comFoco.equals(semFoco);
     }
     checks.push(["foco visível no botão do card (Tab)", focoVisivel]);
-    /* Esc: a lista de ordenação abre pelo teclado e fecha com Esc, com o foco de volta no Select */
+    /* Esc: a lista de ordenação abre pelo teclado e fecha com Esc, com o foco de volta no Select.
+       Recarrega para o Tab partir do topo, já que o Select fica acima dos cards */
+    await fo.goto(`${BASE}/index.html`);
+    await fo.waitForSelector(".sapFCard", { timeout: 60000 });
     let noSelect = false;
     for (let i = 0; i < 25 && !noSelect; i += 1) {
       await fo.keyboard.press("Tab");

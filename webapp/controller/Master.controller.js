@@ -19,7 +19,7 @@ sap.ui.define([
 
         /* Modelo da visão com a contagem e o resumo; o resumo é refeito ao voltar do detalhe */
         onInit: function () {
-            this.getView().setModel(new JSONModel({ count: "", total: -1, soFavoritas: false, resumo: resumo.resumo([]) }), "view");
+            this.getView().setModel(new JSONModel({ count: "", total: -1, soFavoritas: false, temFavoritas: false, resumo: resumo.resumo([]) }), "view");
             var oModel = this.getOwnerComponent().getModel();
             oModel.dataLoaded().then(this._refresh.bind(this), this._refresh.bind(this));
             UIComponent.getRouterFor(this).getRoute("master").attachPatternMatched(this._refresh, this);
@@ -87,9 +87,11 @@ sap.ui.define([
         /* Favorito (#18): o binding já trocou o campo Favorita; aqui grava os Ids e avisa a mudança */
         onFavoritePress: function (oEvent) {
             var aTrilhas = this.getOwnerComponent().getModel().getProperty("/Trilhas") || [];
-            favoritos.save(favoritos.ids(aTrilhas));
+            var bSalvou = favoritos.save(favoritos.ids(aTrilhas));
             var oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
-            MessageToast.show(oBundle.getText(oEvent.getParameter("pressed") ? "favoriteAdded" : "favoriteRemoved"));
+            /* Armazenamento bloqueado: a marca vale só até recarregar, e o aviso diz isso */
+            var sTexto = !bSalvou ? "favoriteNotSaved" : (oEvent.getParameter("pressed") ? "favoriteAdded" : "favoriteRemoved");
+            MessageToast.show(oBundle.getText(sTexto));
         },
 
         /* Atualiza o texto "N trilhas" e o número que liga o estado vazio
@@ -100,6 +102,8 @@ sap.ui.define([
             var oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
             var oViewModel = this.getView().getModel("view");
             oViewModel.setProperty("/total", iCount);
+            /* O aviso "nenhuma favorita" só vale quando não há nenhuma marcada; com busca, vale o aviso comum */
+            oViewModel.setProperty("/temFavoritas", favoritos.ids(this.getOwnerComponent().getModel().getProperty("/Trilhas") || []).length > 0);
             oViewModel.setProperty("/count", oBundle.getText(iCount === 1 ? "trackCountOne" : "trackCount", [iCount]));
         },
 
