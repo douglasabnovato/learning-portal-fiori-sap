@@ -1,4 +1,4 @@
-/* Executor de testes: sobe o "ui5 serve", roda o QUnit e as checagens do app no Chromium headless (lista, resumo, ordenação, busca, detalhe, 404, progresso, favoritos, teclado, foco, Esc, falhas, medição, axe e celular em 375 px) */
+/* Executor de testes: sobe o "ui5 serve", roda o QUnit e as checagens do app no Chromium headless (lista, resumo, ordenação, busca, detalhe, 404, progresso, favoritos, teclado, foco, Esc, falhas, medição, axe e celular em 375 px) e o OPA5 do fluxo principal */
 const { spawn } = require("node:child_process");
 const { chromium } = require("playwright");
 const AxeBuilder = require("@axe-core/playwright").default;
@@ -57,6 +57,15 @@ async function main() {
     const unit = await page.evaluate(() => ({ passed: +document.querySelector("#qunit-testresult .passed").textContent, failed: +document.querySelector("#qunit-testresult .failed").textContent }));
     console.log(`QUnit: ${unit.passed} ok, ${unit.failed} falhas`);
     failures += unit.failed;
+    /* OPA5 (#19): catálogo, busca e detalhe pelo padrão de teste de integração do UI5. Sem nenhuma asserção, conta como falha */
+    const opa = await context.newPage();
+    await opa.goto(`${BASE}/test/integration/opaTests.qunit.html`);
+    await opa.waitForFunction(() => window.QUnit && document.querySelector("#qunit-testresult .total"), null, { timeout: 180000 });
+    const integ = await opa.evaluate(() => ({ passed: +document.querySelector("#qunit-testresult .passed").textContent, failed: +document.querySelector("#qunit-testresult .failed").textContent }));
+    console.log(`OPA5: ${integ.passed} ok, ${integ.failed} falhas`);
+    if (integ.failed) console.log(`  OPA5: ${(await opa.locator("#qunit-tests > li.fail").allInnerTexts()).join(" | ").replace(/\s+/g, " ").slice(0, 600)}`);
+    failures += integ.failed + (integ.passed === 0 ? 1 : 0);
+    await opa.close();
 
     const app = await context.newPage();
     await app.goto(`${BASE}/index.html`);
