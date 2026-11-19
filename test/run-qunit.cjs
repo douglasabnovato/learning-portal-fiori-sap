@@ -64,7 +64,8 @@ async function main() {
     const integ = await opa.evaluate(() => ({ passed: +document.querySelector("#qunit-testresult .passed").textContent, failed: +document.querySelector("#qunit-testresult .failed").textContent }));
     console.log(`OPA5: ${integ.passed} ok, ${integ.failed} falhas`);
     if (integ.failed) console.log(`  OPA5: ${(await opa.locator("#qunit-tests > li.fail").allInnerTexts()).join(" | ").replace(/\s+/g, " ").slice(0, 600)}`);
-    failures += integ.failed + (integ.passed === 0 ? 1 : 0);
+    /* As 3 asserções do CatalogoJourney: se uma sumir, o OPA5 deixa de provar o fluxo */
+    failures += integ.failed + (integ.passed === 3 ? 0 : 1);
     await opa.close();
 
     const app = await context.newPage();

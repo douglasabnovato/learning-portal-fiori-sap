@@ -18,10 +18,12 @@ const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", "
 /* Servidor estático mínimo, como o Pages: só o subcaminho, gzip quando o navegador aceita */
 function servir() {
   return http.createServer((req, res) => {
-    const url = decodeURIComponent(req.url.split("?")[0]);
+    let url;
+    try { url = decodeURIComponent(req.url.split("?")[0]); } catch { res.writeHead(400); res.end(); return; }
     if (!url.startsWith(PREFIXO)) { res.writeHead(404); res.end(); return; }
     let arquivo = path.join(DIST, url.slice(PREFIXO.length));
-    if (!arquivo.startsWith(DIST)) { res.writeHead(403); res.end(); return; }
+    const relativo = path.relative(DIST, arquivo);
+    if (relativo.startsWith("..") || path.isAbsolute(relativo)) { res.writeHead(403); res.end(); return; }
     if (fs.existsSync(arquivo) && fs.statSync(arquivo).isDirectory()) arquivo = path.join(arquivo, "index.html");
     if (!fs.existsSync(arquivo)) { res.writeHead(404); res.end(); return; }
     const tipo = TIPOS[path.extname(arquivo)] || "application/octet-stream";
