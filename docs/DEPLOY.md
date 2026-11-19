@@ -1,21 +1,24 @@
 # Deploy · Learning Portal Fiori SAP
 
-Como o portal vai ao ar no GitHub Pages, de graça. Revisto em 16/11/2026 para bater com os workflows atuais.
+Como o portal vai ao ar no GitHub Pages, de graça. Revisto em 18/11/2026: o site está no ar, e o `dist/` ficou enxuto (#30).
 
-## 1. Estado em 16/11/2026
+## 1. Estado em 18/11/2026
 
-- `curl -s -o /dev/null -w "%{http_code}" https://douglasabnovato.github.io/learning-portal-fiori-sap/`: **404**.
-- `gh api repos/douglasabnovato/learning-portal-fiori-sap/pages`: **404** (Pages desligado).
-- O último run do workflow **Publicar** na `main` (43799508961, 16/11/2026) ficou como `skipped`: a variável `PAGES_VIA_ACTIONS` não existe.
-- Ligar o Pages e criar a variável é do responsável (#3).
+- `curl -s -o /dev/null -w "%{http_code}" https://douglasabnovato.github.io/learning-portal-fiori-sap/`: **200**, com o `title` "Learning Portal Fiori SAP" e o `sap-ui-custom.js` do build.
+- `gh api repos/douglasabnovato/learning-portal-fiori-sap/pages`: `build_type` **workflow**.
+- `gh api repos/douglasabnovato/learning-portal-fiori-sap/actions/variables`: `PAGES_VIA_ACTIONS=true`.
+- O run 43927298915 do **Publicar** (push na `main`, commit `dfacceb`, 16/11/2026) saiu `success`; o site serve esse build.
+- `SITE_URL=https://douglasabnovato.github.io/learning-portal-fiori-sap/ npm run test:dist` em 18/11/2026: as 8 checagens passam no site (11 cards, busca, detalhe, F5, trilha inexistente, estado vazio, nenhuma requisição com erro, nada de `ui5.sap.com`).
+- O site publicado ainda usa o build antigo, de cerca de 145 MB. O `dist/` enxuto vai ao ar no próximo merge na `main`.
 
 ## 2. Como funciona
 
 | Peça | O que faz |
 |---|---|
-| `.github/workflows/ci.yml` | Em cada PR para a `main` ou para `developer/**` e em cada push na `main`: `npm ci`, instala o Chromium, `npm test` e `npm run build`. Job `verificar`, exigido pelo ruleset `principal-protegida` |
+| `.github/workflows/ci.yml` | Em cada PR para a `main` ou para `developer/**` e em cada push na `main`: `npm ci`, instala o Chromium, `npm test`, `npm run build` e `npm run test:dist`. Job `verificar`, exigido pelo ruleset `principal-protegida` |
 | `.github/workflows/deploy.yml` | Workflow **Publicar**. Roda em push na `main` só se `vars.PAGES_VIA_ACTIONS == 'true'`, ou à mão (`workflow_dispatch`). Repete os testes e o build e publica a pasta `dist/` com `actions/deploy-pages` |
-| `npm run build` | `ui5 build self-contained --all --clean-dest`: gera o `dist/` com a biblioteca OpenUI5 embutida, sem CDN |
+| `npm run build` | `ui5 build self-contained --all --clean-dest` gera o `dist/` com a biblioteca OpenUI5 embutida, sem CDN. Depois, `scripts/enxugar-dist.cjs` tira o que o site não usa (ver seção 6) |
+| `npm run test:dist` | `test/run-dist.cjs` serve o `dist/` em `/learning-portal-fiori-sap/`, com gzip, e confere no Chromium a lista, a busca, o detalhe, o F5, a trilha inexistente e o estado vazio, sem requisição com erro e sem `ui5.sap.com`. Com `SITE_URL`, faz o mesmo no site publicado |
 
 Por que o app funciona no subcaminho `/learning-portal-fiori-sap/` sem mudar código:
 - o `webapp/index.html` carrega `resources/sap-ui-core.js` por caminho relativo, e o build troca por `resources/sap-ui-custom.js` dentro do `dist/`;
@@ -25,6 +28,8 @@ Por que o app funciona no subcaminho `/learning-portal-fiori-sap/` sem mudar có
 Medição: o `index.html` carrega o GoatCounter (`douglasabnovato.goatcounter.com`) só fora de `localhost`. Sem a conta (#16), o script carrega e nada é contado.
 
 ## 3. Passo a passo do responsável (#3)
+
+Feito: conferido em 18/11/2026 (seção 1). O passo a passo fica como registro, para refazer a publicação num repositório novo.
 
 1. Abrir https://github.com/douglasabnovato/learning-portal-fiori-sap/settings/pages.
 2. Em **Build and deployment → Source**, escolher **GitHub Actions**. Não salvar nenhuma branch.
@@ -52,15 +57,19 @@ Depois disso, o agente mede o LCP no site (#15) e o critério 7 pode sair de "Pa
 npm ci
 npx playwright install chromium   # só na primeira vez
 npm test                          # QUnit e checagens no navegador, com axe
-npm run build                     # gera dist/
+npm run build                     # gera dist/ e tira o que o site não usa
+npm run test:dist                 # serve dist/ em /learning-portal-fiori-sap/ e confere o app
 ```
 
-Para simular o subcaminho: copiar `dist/` para uma pasta `lp/learning-portal-fiori-sap/` e servir `lp/` com um servidor que comprime, como o Pages (`npx serve lp`).
+As portas padrão são 8099 (`npm test`) e 8098 (`npm run test:dist`). Se estiverem ocupadas, troque com `TEST_PORT` e `DIST_PORT`.
 
-## 6. Limites do plano gratuito
+## 6. Limites do plano gratuito e tamanho do `dist/`
 
 - GitHub Pages: site público, até 1 GB, cerca de 100 GB de banda por mês.
-- O `dist/` tem cerca de 149 MB e 9.400 arquivos, porque `--all` copia as bibliotecas inteiras. Cabe no limite, mas atrasa o upload. Reduzir o build está numa issue própria.
+- `--all` copia as bibliotecas inteiras: o `dist/` tinha 145 MB e 9.421 arquivos (`du -sh dist`, 18/11/2026).
+- O `scripts/enxugar-dist.cjs` tira os mapas de código (`.map`), as fontes de depuração (`-dbg.js`), as fontes `.less`, os temas que o app não usa (`sap_hcb`, `sap_horizon_dark`, `sap_horizon_hcb` e `sap_horizon_hcw`) e as pastas de teste. Mantém todas as bibliotecas, os textos de todos os idiomas e o CLDR, que o UI5 pede conforme o idioma do navegador.
+- Depois: **56 MB e 3.198 arquivos** (`du -sh dist` e `find dist -type f | wc -l`, 18/11/2026). O `npm run test:dist` passa com o `dist/` enxuto.
+- Sem `--all`, o `dist/` cai para 5,5 MB, mas o tema e os módulos carregados sob demanda faltam e a lista não abre: o `npm run test:dist` falha. Por isso o build segue com `--all` e o enxugamento vem depois.
 
 ## 7. Segurança e LGPD
 

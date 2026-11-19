@@ -22,3 +22,5 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm test
       - run: npm run build
+      # Confere o dist/ enxuto servido no subcaminho do Pages (#30)
+      - run: npm run test:dist

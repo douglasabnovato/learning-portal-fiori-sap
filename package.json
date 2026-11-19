@@ -4,7 +4,8 @@
   "scripts": {
     "start": "ui5 serve --open index.html",
     "test": "node test/run-qunit.cjs",
-    "build": "ui5 build self-contained --all --clean-dest"
+    "build": "ui5 build self-contained --all --clean-dest && node scripts/enxugar-dist.cjs",
+    "test:dist": "node test/run-dist.cjs"
   },
   "keywords": [],
   "author": "",
