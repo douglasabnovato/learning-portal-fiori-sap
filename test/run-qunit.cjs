@@ -1,4 +1,4 @@
-/* Executor de testes: sobe o "ui5 serve", roda o QUnit e as checagens do app no Chromium headless (lista, resumo, ordenação, busca, detalhe, 404, progresso, favoritos, teclado, foco, Esc, falhas, medição e axe) */
+/* Executor de testes: sobe o "ui5 serve", roda o QUnit e as checagens do app no Chromium headless (lista, resumo, ordenação, busca, detalhe, 404, progresso, favoritos, teclado, foco, Esc, falhas, medição, axe e celular em 375 px) */
 const { spawn } = require("node:child_process");
 const { chromium } = require("playwright");
 const AxeBuilder = require("@axe-core/playwright").default;
@@ -216,6 +216,46 @@ async function main() {
     }
     checks.push(["ordenação abre pelo teclado e fecha com Esc", escOk]);
     await a11y.close();
+    /* Celular (#31): 375 x 812, sem rolagem horizontal na lista e no detalhe, axe na lista
+       e os controles da barra alcançáveis (visíveis ou no menu de estouro do OverflowToolbar) */
+    const cel = await browser.newContext({ locale: "pt-BR", viewport: { width: 375, height: 812 }, hasTouch: true });
+    cel.setDefaultNavigationTimeout(60000);
+    const mob = await cel.newPage();
+    /* O conteúdo da Page do UI5 rola dentro de um contêiner que corta o excesso lateral: além do scrollWidth,
+       confere que nenhum elemento visível passa da borda direita da tela */
+    const semRolagemLateral = () => mob.evaluate(() => {
+      const largura = window.innerWidth;
+      const fora = [...document.querySelectorAll(".sapMPage *")].filter((el) => {
+        if (!el.getClientRects().length || getComputedStyle(el).visibility === "hidden") return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.right > largura + 1;
+      });
+      if (fora.length) console.log(`fora da tela: ${fora.slice(0, 3).map((el) => el.id || el.className).join(", ")}`);
+      return document.documentElement.scrollWidth <= largura && fora.length === 0;
+    });
+    mob.on("console", (m) => { if (m.text().startsWith("fora da tela")) console.log(`  celular: ${m.text()}`); });
+    await mob.goto(`${BASE}/index.html`);
+    await mob.waitForSelector(".sapFCard", { timeout: 60000 });
+    const onzeNoCelular = await ate(async () => (await mob.locator(".sapFCard").count()) === 11);
+    checks.push(["celular: lista sem rolagem horizontal (375 px)", onzeNoCelular && await semRolagemLateral()]);
+    checks.push(["celular: axe sem violações na lista (375 px)", semViolacoes("lista no celular", await axe(mob))]);
+    const controles = ["searchField", "statusFilter", "sortSelect", "favoriteOnly"];
+    const visivel = (id) => mob.locator(`[id$="--${id}"]`).first().isVisible();
+    const estouro = mob.locator('[id$="-overflowButton"]:visible');
+    if (await estouro.count()) await estouro.first().click();
+    let alcancaveis = true;
+    for (const id of controles) {
+      const ok = await ate(() => visivel(id), 5000);
+      if (!ok) console.log(`  celular: ${id} não aparece nem no menu de estouro`);
+      alcancaveis = alcancaveis && ok;
+    }
+    checks.push(["celular: busca, status, ordenação e só favoritas alcançáveis", alcancaveis]);
+    await mob.keyboard.press("Escape");
+    await mob.goto(`${BASE}/index.html#/trilha/4`);
+    await mob.locator("button", { hasText: "Concluir módulo" }).waitFor({ timeout: 60000 });
+    await semAnimacao(mob);
+    checks.push(["celular: detalhe sem rolagem horizontal (375 px)", await semRolagemLateral()]);
+    await cel.close();
     /* Medição (D5): nada do GoatCounter em localhost; no "site publicado", o script carrega e o detalhe conta o evento */
     const pedidosGc = [];
     context.on("request", (r) => { if (r.url().startsWith("https://gc.zgo.at/")) pedidosGc.push(r.url()); });
