@@ -6,29 +6,28 @@ O projeto simula um **portal de aprendizagem tecnológica**, permitindo visualiz
 
 ---
 
-## Estado e próximos passos (ciclo de 16/11/2026)
+## Estado e próximos passos (revisão de 18/11/2026)
 
-Sem site publicado: o GitHub Pages não está ligado, e `douglasabnovato.github.io/learning-portal-fiori-sap/` dá 404 em 16/11/2026 ([#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3)). Para ver o projeto, rode localmente.
+No ar: https://douglasabnovato.github.io/learning-portal-fiori-sap/ (GitHub Pages, publicado pelo Actions; conferido em 18/11/2026).
 
-Critérios do MVP (N2): 9 de 12 atendidos em 16/11/2026 ([docs/MVP.md](docs/MVP.md)). Finalizado: sim. Os critérios 3, 5 e 7 dependem do responsável. Os 3 alertas do Dependabot abertos (`sigstore`, `@sigstore/core` e `minimatch`, só nas ferramentas do UI5, fora do `dist/`) estão aceitos na [ADR-06](docs/adr/0006-aceitar-alertas-de-desenvolvimento.md), por ordem do responsável ([#35](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/35)). A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
+Critérios do MVP (N2): 10 de 12 atendidos em 18/11/2026 ([docs/MVP.md](docs/MVP.md)). Finalizado: não. O 7 não atende: o LCP móvel no site é de 8,48 s, e a meta é 2,5 s ([#39](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/39)). O 5 depende da conta do GoatCounter ([#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16), responsável). Os 3 alertas do Dependabot abertos (`sigstore`, `@sigstore/core` e `minimatch`, só nas ferramentas do UI5, fora do `dist/`) estão aceitos na [ADR-06](docs/adr/0006-aceitar-alertas-de-desenvolvimento.md), por ordem do responsável ([#35](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/35)). A `main` só recebe mudanças por PR com o job `verificar` do CI verde.
 
 **O que foi feito**
+- 18/11/2026: teste do navegador sem esperas fixas ([#33](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/33)); celular em 375 px, com o título que agora quebra a linha ([#31](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/31)); `dist/` de 145 MB para 56 MB, com teste do build no subcaminho do Pages ([#30](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/30)); ESLint e OPA5 no CI ([#19](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/19)); LCP medido no site ([#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15)).
 - 16/11/2026: alertas de desenvolvimento do Dependabot aceitos na [ADR-06](docs/adr/0006-aceitar-alertas-de-desenvolvimento.md) ([#35](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/35)).
 - Ciclo de 16/11/2026 (PR feature → sprint [#32](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/32)): favoritos nas trilhas ([#18](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/18)); estado vazio da busca, que nunca aparecia, corrigido; axe na lista, no detalhe e na trilha inexistente, foco visível e Esc no teste do navegador; dependências de desenvolvimento atualizadas; [docs/DEPLOY.md](docs/DEPLOY.md) refeito.
 - Ciclo de 10/11/2026 ([#28](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/28)): medição de uso sem cookie (GoatCounter), publicação no Pages travada pela variável `PAGES_VIA_ACTIONS`, meta da hipótese.
 - Antes: `main` protegida, resumo da jornada, ordenação e CI nos PRs para a `developer` ([#21](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/21)), aviso de falha e teste de teclado ([#11](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/11)), progresso salvo no navegador ([#9](https://github.com/douglasabnovato/learning-portal-fiori-sap/pull/9)).
 
-**O que queremos fazer**
-- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3) Ligar o Pages e criar a variável `PAGES_VIA_ACTIONS` (responsável).
-- [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Criar a conta do GoatCounter (responsável).
-- [#29](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/29) Ligar os alertas do Dependabot (ligados pelo responsável em 16/11/2026; falta fechar a issue).
-- [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta (responsável).
-- [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) Medir LCP e acessibilidade no site publicado, depois da #3.
-- [#27](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/27) Validar com uma pessoa de fora.
-- [#31](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/31) Testar no celular (375 px).
-- [#30](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/30) Publicar só o que o app usa no `dist/`.
+**O que queremos fazer** (as 3 issues `proximo-passo`)
+- [#39](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/39) Baixar o LCP móvel do site para até 2,5 s.
+- [#27](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/27) Validar com uma pessoa de fora, no site publicado.
 - [#20](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/20) Lista de módulos no detalhe da trilha.
-- [#19](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/19) ESLint e teste OPA5 no CI.
+
+**Com o responsável**
+- [#16](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/16) Criar a conta do GoatCounter.
+- [#17](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/17) Confirmar a hipótese e a meta.
+- [#3](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/3), [#15](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/15) e [#29](https://github.com/douglasabnovato/learning-portal-fiori-sap/issues/29): já cumpridas em 18/11/2026; falta fechar.
 
 **Onde está a documentação**
 - Estado e critérios: [docs/MVP.md](docs/MVP.md).
@@ -284,7 +283,10 @@ learning-portal-fiori-sap/
 │
 ├── .github/workflows/    (ci.yml e deploy.yml)
 ├── docs/                 (MVP, plano, deploy)
-├── test/run-qunit.cjs    (executor dos testes)
+├── scripts/enxugar-dist.cjs (tira do dist/ o que o site não usa)
+├── test/run-qunit.cjs    (executor dos testes: QUnit, OPA5 e Chromium)
+├── test/run-dist.cjs     (checagens no dist/ ou no site publicado)
+├── eslint.config.mjs
 │
 ├── webapp/
 │   │
@@ -305,6 +307,7 @@ learning-portal-fiori-sap/
 │   │   └── trilhas.json
 │   │
 │   ├── test/unit/          (QUnit)
+│   ├── test/integration/   (OPA5)
 │   │
 │   ├── view/
 │   │   ├── App.view.xml
@@ -366,7 +369,7 @@ Utilizado para execução e desenvolvimento local da aplicação.
 
 ## 🚀 Como Executar o Projeto
 
-Pré-requisito: Node.js 20 ou superior. O UI5 CLI vem como dependência do projeto (não precisa instalar global).
+Pré-requisito: Node.js 22.13 ou superior (o `@axe-core/playwright` pede 22.12 e o ESLint 10, 22.13; o CI usa o Node 22). O UI5 CLI vem como dependência do projeto (não precisa instalar global).
 
 ```bash
 git clone https://github.com/douglasabnovato/learning-portal-fiori-sap.git
@@ -388,22 +391,24 @@ A biblioteca OpenUI5 1.136 é baixada pelo UI5 CLI (definida em `ui5.yaml`) e se
 
 ```bash
 npx playwright install chromium   # só na primeira vez
-npm test
+npm run lint                      # ESLint
+npm test                          # QUnit, OPA5 e checagens no Chromium
+npm run build && npm run test:dist   # build e checagens no dist/ servido em /learning-portal-fiori-sap/
 ```
 
-Roda os testes QUnit de `model/formatter.js`, `model/progress.js`, `model/resumo.js` e `model/favoritos.js` (49 asserções) e 29 checagens no Chromium: lista, resumo, ordenação, busca e busca vazia, detalhe, progresso salvo, favoritos, teclado, foco visível, Esc, falha ao carregar, rota inexistente, medição e axe (WCAG 2.1 A e AA) na lista, no detalhe e na trilha inexistente. O CI roda o mesmo comando nos PRs para a `main` e para `developer/**`. Os testes QUnit também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html`.
+O `npm test` roda os testes QUnit de `model/formatter.js`, `model/progress.js`, `model/resumo.js` e `model/favoritos.js` (49 asserções), o OPA5 do fluxo principal (catálogo, busca e detalhe, 3 asserções) e 33 checagens no Chromium: lista, resumo, ordenação, busca e busca vazia, detalhe, progresso salvo, favoritos, teclado, foco visível, Esc, falha ao carregar, rota inexistente, medição, axe (WCAG 2.1 A e AA) na lista, no detalhe e na trilha inexistente, e celular em 375 px. O CI roda lint, testes, build e `test:dist` nos PRs para a `main` e para `developer/**`. Os testes QUnit e OPA5 também abrem em `http://localhost:8080/test/unit/unitTests.qunit.html` e `http://localhost:8080/test/integration/opaTests.qunit.html`. Portas ocupadas: `TEST_PORT` (padrão 8099) e `DIST_PORT` (padrão 8098).
 
 ### Publicar (gratuito)
 
 ```bash
-npm run build        # gera dist/ autocontido
+npm run build        # gera dist/ autocontido e tira o que o site não usa (56 MB)
 ```
 
-O CI (`.github/workflows/ci.yml`) testa e gera o `dist/`. O workflow `deploy.yml` (**Publicar**) roda os testes e publica no GitHub Pages a cada push na `main`, mas só quando a variável `PAGES_VIA_ACTIONS` for `true`; também roda à mão. O Pages ainda não está ligado (#3).
+O CI (`.github/workflows/ci.yml`) testa e gera o `dist/`. O workflow `deploy.yml` (**Publicar**) roda os testes e publica no GitHub Pages a cada push na `main`, quando a variável `PAGES_VIA_ACTIONS` é `true` (ligada desde 16/11/2026); também roda à mão.
 
 ### Em produção
 
-- URL (ainda não publicada, #3): https://douglasabnovato.github.io/learning-portal-fiori-sap/
+- URL: https://douglasabnovato.github.io/learning-portal-fiori-sap/
 - Hospedagem: GitHub Pages (gratuito), publicado pelo GitHub Actions
 - Passo a passo: [docs/DEPLOY.md](docs/DEPLOY.md)
 
@@ -648,12 +653,12 @@ Adicionar práticas de qualidade e engenharia de software.
 - [ ] Testes de Controller
 - [ ] Testes de Data Binding
 - [x] Testes de filtros
-- [ ] OPA5
+- [x] OPA5
 - [x] Testes de navegação
 
 ### Qualidade de código
 
-- [ ] ESLint
+- [x] ESLint
 - [ ] Prettier
 - [ ] Padronização de nomenclatura
 - [ ] Revisão de arquitetura
@@ -689,12 +694,12 @@ GitHub Actions
 Objetivos:
 
 - [x] Criar pipeline GitHub Actions
-- [ ] Executar lint automaticamente
+- [x] Executar lint automaticamente
 - [x] Executar testes automaticamente
 - [x] Executar `ui5 build`
 - [x] Rodar o CI nos PRs para a branch de sprint
 - [ ] Gerar artefato de produção
-- [ ] Automatizar deploy
+- [x] Automatizar deploy
 
 ---
 
