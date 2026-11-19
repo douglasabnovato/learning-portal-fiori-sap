@@ -9,7 +9,8 @@
         <content>
             <VBox class="sapUiResponsiveContentPadding">
                 <VBox class="sapUiMediumMarginBottom">
-                    <Title text="{i18n>welcomeTitle}" level="H1" titleStyle="H2" class="sapUiSmallMarginBottom" />
+                    <!-- wrapping: no celular (375 px) o título quebra a linha em vez de cortar em "Minha jornada de apre..." (#31) -->
+                    <Title text="{i18n>welcomeTitle}" level="H1" titleStyle="H2" wrapping="true" class="sapUiSmallMarginBottom" />
                     <Text text="{i18n>welcomeSubtitle}" />
                 </VBox>
 
