@@ -8,6 +8,13 @@
 
 **Finalizado:** não — o 7 (LCP de 8,48 s no site, meta de 2,5 s) é trabalho de código, na #39. O 5 depende do responsável (conta do GoatCounter, #16, com `depende-do-responsavel`). Os 3 alertas do Dependabot seguem aceitos na [ADR-06](adr/0006-aceitar-alertas-de-desenvolvimento.md)
 
+## Produto
+
+- **Problema:** quem avalia precisa ver domínio de SAPUI5 e Fiori num portal de trilhas de aprendizagem que dá para abrir.
+- **Público:** recrutadores e pessoas da área SAP que avaliam o portfólio.
+- **Hipótese:** acreditamos que quem avalia o portfólio encontra uma trilha e vê o progresso dela sozinho. Saberemos quando uma pessoa de fora fizer o percurso "ache a trilha de Joule e veja o progresso" em menos de 1 minuto no site publicado (#27), e o GoatCounter mostrar as visitas e o evento `abrir-trilha` (#16).
+- **Métrica:** tempo do percurso "ache a trilha de Joule e veja o progresso", medido por sessão observada no site publicado (#27), com visitas e `abrir-trilha` no GoatCounter (falta a conta, #16) — meta: menos de 1 minuto, decidida pelo coordenador em 10/11/2026 (D1), revisável pelo responsável (#17).
+
 ## Problema e hipótese
 
 **Problema e público:** mostra domínio de SAPUI5 e Fiori em um portal de trilhas de aprendizagem que recrutadores e pessoas da área SAP podem abrir.
@@ -66,6 +73,8 @@ OData real, SAP BTP, autenticação e gráficos.
 - 02/11/2026: Lighthouse 12.8.2 local, perfil móvel simulado, sem aparelho real.
 
 ## Histórico
+
+- 20/11/2026: bloco Produto padronizado, sem mudar critérios.
 
 ### Revisão de 16/11/2026, 14h50 (antes da revisão de 18/11)
 
